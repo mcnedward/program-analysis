@@ -1,6 +1,9 @@
 package com.architecture_design.app.ui;
 
+import java.awt.BorderLayout;
 import java.awt.EventQueue;
+import java.awt.Font;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
@@ -11,19 +14,18 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JTextField;
+import javax.swing.JPanel;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.EmptyBorder;
 
 import com.architecture_design.app.classobject.ClassObject;
 import com.architecture_design.app.parser.FileParser;
-import com.architecture_design.app.shapes.ClassDiagram;
 
 /**
  * @author Edward McNealy <edwardmcn64@gmail.com> - Oct 18, 2015
@@ -36,19 +38,16 @@ public class MainWindow extends JFrame {
 	private DrawingPanel drawingPanel;
 	private DrawingPanel filePanel;
 	private DrawingPanel contentPanel;
-	// Text Fields
-	private JTextField txtFileLocation;
 	// Labels
 	private JLabel lblFileName;
 	// Buttons
 	private JButton btnBrowse;
 	private JButton btnLoad;
+	private JComboBox<String> comboBox;
 	
 	private FileParser fileParser;
 	
 	private String fileLocation;
-	
-	private ClassObject classObject;
 	
 	/**
 	 * Launch the application.
@@ -73,6 +72,14 @@ public class MainWindow extends JFrame {
 		initialize();
 		
 		fileParser = new FileParser();
+		findResources();
+	}
+	
+	private void findResources() {
+		File resourceDir = new File("resources");
+		for (File file : resourceDir.listFiles()) {
+			comboBox.addItem(file.getAbsolutePath());
+		}
 	}
 	
 	private void initialize() {
@@ -95,42 +102,48 @@ public class MainWindow extends JFrame {
 		drawingPanel.setLayout(null);
 		
 		filePanel = new DrawingPanel();
-		filePanel.setBounds(5, 5, 573, 23);
+		filePanel.setBounds(5, 5, 573, 29);
 		drawingPanel.add(filePanel);
-		filePanel.setLayout(new BoxLayout(filePanel, BoxLayout.X_AXIS));
+		filePanel.setLayout(new GridLayout(2, 1, 0, 0));
+		filePanel.setLayout(new BorderLayout(0, 0));
 		
 		JLabel lblFileLocation = new JLabel("File Location:");
-		filePanel.add(lblFileLocation);
+		filePanel.add(lblFileLocation, BorderLayout.WEST);
+		lblFileLocation.setFont(new Font("Segoe UI", Font.PLAIN, 12));
 		
-		txtFileLocation = new JTextField();
-		filePanel.add(txtFileLocation);
-		txtFileLocation.setColumns(10);
+		comboBox = new JComboBox<String>();
+		comboBox.setEditable(true);
+		filePanel.add(comboBox, BorderLayout.CENTER);
 		
-		btnBrowse = new JButton("Browse");
-		filePanel.add(btnBrowse);
+		JPanel panel = new JPanel();
+		filePanel.add(panel, BorderLayout.EAST);
+		panel.setLayout(new GridLayout(0, 2, 0, 0));
 		
 		btnLoad = new JButton("Load");
-		filePanel.add(btnLoad);
-		btnLoad.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				loadAction();
-			}
-		});
+		panel.add(btnLoad);
+		btnLoad.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+		
+		btnBrowse = new JButton("Browse");
+		panel.add(btnBrowse);
+		btnBrowse.setFont(new Font("Segoe UI", Font.PLAIN, 12));
 		btnBrowse.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				browseAction();
 			}
 		});
+		btnLoad.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				loadAction();
+			}
+		});
 		
 		contentPanel = new DrawingPanel();
-		contentPanel.setBounds(5, 27, 573, 429);
+		contentPanel.setBounds(5, 47, 573, 409);
 		drawingPanel.add(contentPanel);
 		contentPanel.setLayout(null);
 		
-//		ClassDiagram classDiagram = new ClassDiagram(contentPanel, new ClassObject());
-//		contentPanel.add(classDiagram);
-		
 		lblFileName = new JLabel("New label");
+		lblFileName.setFont(new Font("Segoe UI", Font.PLAIN, 12));
 		lblFileName.setBounds(115, 5, 408, 14);
 		contentPanel.add(lblFileName);
 	}
@@ -141,20 +154,21 @@ public class MainWindow extends JFrame {
 		int result = fileChooser.showOpenDialog(MainWindow.this);
 		if (result == JFileChooser.APPROVE_OPTION) {
 			File selectedFile = fileChooser.getSelectedFile();
-			txtFileLocation.setText(selectedFile.getAbsolutePath());
+			comboBox.addItem(selectedFile.getAbsolutePath());
+			comboBox.setSelectedItem(selectedFile.getAbsolutePath());
 			fileLocation = selectedFile.getAbsolutePath();
 		}
 	}
 	
 	private void loadAction() {
-		fileLocation = txtFileLocation.getText();
+		fileLocation = (String) comboBox.getSelectedItem();
 		if (fileLocation == null || fileLocation == "") {
 			lblFileName.setText("No file location has been set!");
 			return;
 		}
-		List<String> file = readFile("resources/Account.java");
+		List<String> file = readFile(fileLocation);
 		fileParser.setFile(file);
-		classObject = fileParser.createClassObject();
+		ClassObject classObject = fileParser.createClassObject();
 		lblFileName.setText(classObject.toString());
 		
 		contentPanel.addClassObject(classObject);

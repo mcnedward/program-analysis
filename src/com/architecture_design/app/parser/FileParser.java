@@ -46,6 +46,7 @@ public class FileParser {
 
 	public ClassObject createClassObject() {
 		ClassObject classObject = null;
+		variableNames.clear();
 
 		for (String line : file) {
 			classMatcher = classPattern.matcher(line);

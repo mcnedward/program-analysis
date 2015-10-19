@@ -17,6 +17,7 @@ import com.architecture_design.app.shapes.ClassDiagram;
 public class DrawingPanel extends JPanel implements ControllerEventListener {
 	private static final long serialVersionUID = 8628678497368848302L;
 
+	private ClassDiagram classDiagram;
 
 	public DrawingPanel() {
 	}
@@ -27,14 +28,20 @@ public class DrawingPanel extends JPanel implements ControllerEventListener {
 	}
 
 	public void addClassObject(ClassObject classObject) {
-		ClassDiagram classDiagram = new ClassDiagram(this, classObject);
+		if (classDiagram != null) {
+			System.out.println("Removing class diagram for: " + classObject.getClassName());
+			remove(classDiagram);
+		}
+		classDiagram = new ClassDiagram(this, classObject);
 		add(classDiagram);
+		revalidate();
 		repaint();
+		System.out.println("Loading class diagram for: " + classObject.getClassName());
 	}
 
 	@Override
 	public void controlChange(ShortMessage event) {
-//		repaint();
+		repaint();
 	}
 
 	@Override
