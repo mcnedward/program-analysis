@@ -1,92 +1,34 @@
 package com.architecture_design.app.classobject;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author Edward McNealy <edwardmcn64@gmail.com> - Oct 18, 2015
  *
  */
-public class MethodObject {
+public class MethodObject extends BaseObject {
 
-	private String accessModifier;
-	private String nonAccessModifier;
-	private String returnType;
-	private String methodName;
+	private List<MethodParameter> methodParameters;
 
 	public MethodObject() {
-
+		super("Method");
+		methodParameters = new ArrayList<MethodParameter>();
 	}
 
 	/**
-	 * @return the accessModifier
+	 * @return the methodParameters
 	 */
-	public String getAccessModifier() {
-		return accessModifier;
+	public List<MethodParameter> getMethodParameters() {
+		return methodParameters;
 	}
 
 	/**
-	 * @param accessModifier
-	 *            the accessModifier to set
+	 * @param methodParameters
+	 *            the methodParameters to set
 	 */
-	public void setAccessModifier(String accessModifier) {
-		this.accessModifier = accessModifier;
-	}
-
-	/**
-	 * @return the nonAccessModifier
-	 */
-	public String getNonAccessModifier() {
-		return nonAccessModifier;
-	}
-
-	/**
-	 * @param nonAccessModifier
-	 *            the nonAccessModifier to set
-	 */
-	public void setNonAccessModifier(String nonAccessModifier) {
-		this.nonAccessModifier = nonAccessModifier;
-	}
-
-	/**
-	 * @return the returnType
-	 */
-	public String getReturnType() {
-		return returnType;
-	}
-
-	/**
-	 * @param returnType
-	 *            the returnType to set
-	 */
-	public void setReturnType(String returnType) {
-		this.returnType = returnType;
-	}
-
-	/**
-	 * @return the methodName
-	 */
-	public String getMethodName() {
-		return methodName;
-	}
-
-	/**
-	 * @param methodName
-	 *            the methodName to set
-	 */
-	public void setMethodName(String methodName) {
-		this.methodName = methodName;
-	}
-
-	@Override
-	public String toString() {
-		String value = "Method: ";
-		if (accessModifier != null)
-			value += accessModifier + " ";
-		if (nonAccessModifier != null)
-			value += nonAccessModifier + " ";
-		if (returnType != null)
-			value += returnType + " ";
-		if (methodName != null)
-			value += methodName;
-		return value;
+	public void setMethodParameters(List<MethodParameter> methodParameters) {
+		this.methodParameters = methodParameters;
 	}
 
 }

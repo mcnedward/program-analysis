@@ -15,18 +15,24 @@ public class ClassObject {
 	private String superClassName;
 	private List<String> interfaces;
 	private List<MethodObject> methods;
+	private List<VariableObject> variables;
 
 	public ClassObject() {
-		methods = new ArrayList<MethodObject>();
 		interfaces = new ArrayList<String>();
+		methods = new ArrayList<MethodObject>();
+		variables = new ArrayList<VariableObject>();
+	}
+
+	public void addInterface(String interfaceName) {
+		interfaces.add(interfaceName);
 	}
 
 	public void addMethod(MethodObject method) {
 		methods.add(method);
 	}
 
-	public void addInterface(String interfaceName) {
-		interfaces.add(interfaceName);
+	public void addVariable(VariableObject variable) {
+		variables.add(variable);
 	}
 
 	/**
@@ -90,6 +96,21 @@ public class ClassObject {
 	}
 
 	/**
+	 * @return the interfaces
+	 */
+	public List<String> getInterfaces() {
+		return interfaces;
+	}
+
+	/**
+	 * @param interfaces
+	 *            the interfaces to set
+	 */
+	public void setInterfaces(List<String> interfaces) {
+		this.interfaces = interfaces;
+	}
+
+	/**
 	 * @return the methods
 	 */
 	public List<MethodObject> getMethods() {
@@ -105,18 +126,18 @@ public class ClassObject {
 	}
 
 	/**
-	 * @return the interfaces
+	 * @return the variables
 	 */
-	public List<String> getInterfaces() {
-		return interfaces;
+	public List<VariableObject> getVariables() {
+		return variables;
 	}
 
 	/**
-	 * @param interfaces
-	 *            the interfaces to set
+	 * @param variables
+	 *            the variables to set
 	 */
-	public void setInterfaces(List<String> interfaces) {
-		this.interfaces = interfaces;
+	public void setVariables(List<VariableObject> variables) {
+		this.variables = variables;
 	}
 
 	@Override
