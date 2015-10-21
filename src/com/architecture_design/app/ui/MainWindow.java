@@ -27,6 +27,7 @@ import javax.swing.border.EmptyBorder;
 
 import com.architecture_design.app.classobject.ClassObject;
 import com.architecture_design.app.parser.FileParser;
+import javax.swing.SwingConstants;
 
 /**
  * @author Edward McNealy <edwardmcn64@gmail.com> - Oct 18, 2015
@@ -48,6 +49,8 @@ public class MainWindow extends JFrame {
 	private FileParser fileParser;
 	
 	private String fileLocation;
+	private JPanel panel_1;
+	private JLabel lblClassStuffHere;
 	
 	/**
 	 * Launch the application.

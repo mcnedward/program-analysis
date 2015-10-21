@@ -50,8 +50,8 @@ public class FileParser {
 		ClassObject classObject = null;
 		variableNames.clear();
 
-		Map<String, List<String>> methodMap = new HashMap<String, List<String>>();
-		String currentMethod = "";
+		Map<MethodObject, List<String>> methodMap = new HashMap<MethodObject, List<String>>();
+		MethodObject currentMethod = null;
 		boolean isMethod = false;
 
 		for (String line : file) {
@@ -78,7 +78,7 @@ public class FileParser {
 					MethodObject method = getMethodObject(line);
 					classObject.addMethod(method);
 					isMethod = true;
-					currentMethod = method.getName();
+					currentMethod = method;
 				} else if (variableMatcher.find()) {
 					VariableObject variableObject = handleVariable(line);
 					if (variableObject != null) {
@@ -88,7 +88,7 @@ public class FileParser {
 			}
 		}
 		for (MethodObject method : classObject.getMethods()) {
-			List<String> methodLines = methodMap.get(method.getName());
+			List<String> methodLines = methodMap.get(method);
 			method.setMethodLines(methodLines);
 		}
 
