@@ -29,14 +29,14 @@ public class DrawingPanel extends JPanel implements ControllerEventListener {
 
 	public void addClassObject(ClassObject classObject) {
 		if (classDiagram != null) {
-			System.out.println("Removing class diagram for: " + classObject.getClassName());
+			System.out.println("Removing class diagram for: " + classObject.getName());
 			remove(classDiagram);
 		}
-		classDiagram = new ClassDiagram(this, classObject);
+		//classDiagram = new ClassDiagram(this, classObject);
 		add(classDiagram);
 		revalidate();
 		repaint();
-		System.out.println("Loading class diagram for: " + classObject.getClassName());
+		System.out.println("Loading class diagram for: " + classObject.getName());
 	}
 
 	@Override

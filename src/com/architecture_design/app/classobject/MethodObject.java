@@ -10,10 +10,12 @@ import java.util.List;
 public class MethodObject extends BaseObject {
 
 	private List<MethodParameter> methodParameters;
+	private List<String> methodLines;
 
 	public MethodObject() {
 		super("Method");
 		methodParameters = new ArrayList<MethodParameter>();
+		methodLines = new ArrayList<String>();
 	}
 
 	/**
@@ -29,6 +31,20 @@ public class MethodObject extends BaseObject {
 	 */
 	public void setMethodParameters(List<MethodParameter> methodParameters) {
 		this.methodParameters = methodParameters;
+	}
+
+	/**
+	 * @return the methodLines
+	 */
+	public List<String> getMethodLines() {
+		return methodLines;
+	}
+
+	/**
+	 * @param methodLines the methodLines to set
+	 */
+	public void setMethodLines(List<String> methodLines) {
+		this.methodLines = methodLines;
 	}
 
 }

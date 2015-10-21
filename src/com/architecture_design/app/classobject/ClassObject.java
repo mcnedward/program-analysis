@@ -7,17 +7,17 @@ import java.util.List;
  * @author Edward McNealy <edwardmcn64@gmail.com> - Oct 18, 2015
  *
  */
-public class ClassObject {
+public class ClassObject extends BaseObject {
 
 	private String accessModifier;
 	private String nonAccessModifier;
-	private String className;
 	private String superClassName;
 	private List<String> interfaces;
 	private List<MethodObject> methods;
 	private List<VariableObject> variables;
 
 	public ClassObject() {
+		super("class");
 		interfaces = new ArrayList<String>();
 		methods = new ArrayList<MethodObject>();
 		variables = new ArrayList<VariableObject>();
@@ -33,6 +33,15 @@ public class ClassObject {
 
 	public void addVariable(VariableObject variable) {
 		variables.add(variable);
+	}
+	
+	public MethodObject getMethodByName(String methodName) {
+		int index = methods.indexOf(methodName);
+		if (index < 0) {
+			System.out.println("There is no method with the name: " + methodName);
+			return null;
+		}
+		return methods.get(index);
 	}
 
 	/**
@@ -63,21 +72,6 @@ public class ClassObject {
 	 */
 	public void setNonAccessModifier(String nonAccessModifier) {
 		this.nonAccessModifier = nonAccessModifier;
-	}
-
-	/**
-	 * @return the className
-	 */
-	public String getClassName() {
-		return className;
-	}
-
-	/**
-	 * @param className
-	 *            the className to set
-	 */
-	public void setClassName(String className) {
-		this.className = className;
 	}
 
 	/**
@@ -147,8 +141,8 @@ public class ClassObject {
 			value += accessModifier + " ";
 		if (nonAccessModifier != null)
 			value += nonAccessModifier + " ";
-		if (className != null)
-			value += className + " ";
+		if (name != null)
+			value += name + " ";
 		if (superClassName != null)
 			value += "extends " + superClassName;
 		if (!interfaces.isEmpty()) {

@@ -2,6 +2,7 @@ package com.architecture_design.app.ui;
 
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -37,9 +38,8 @@ public class MainWindow extends JFrame {
 	// Panels
 	private DrawingPanel drawingPanel;
 	private DrawingPanel filePanel;
-	private DrawingPanel contentPanel;
-	// Labels
-	private JLabel lblFileName;
+	private DrawingPanel mainPanel;
+	private ContentPanel contentPanel;
 	// Buttons
 	private JButton btnBrowse;
 	private JButton btnLoad;
@@ -90,7 +90,7 @@ public class MainWindow extends JFrame {
 			e.printStackTrace();
 			System.out.println("Something went wrong when trying to use the System Look and Feel...");
 		}
-		setBounds(100, 100, 600, 500);
+		setBounds(100, 100, 1200, 500);
 		drawingPanel = new DrawingPanel();
 		drawingPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(drawingPanel);
@@ -112,6 +112,7 @@ public class MainWindow extends JFrame {
 		lblFileLocation.setFont(new Font("Segoe UI", Font.PLAIN, 12));
 		
 		comboBox = new JComboBox<String>();
+		comboBox.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		comboBox.setEditable(true);
 		filePanel.add(comboBox, BorderLayout.CENTER);
 		
@@ -137,15 +138,15 @@ public class MainWindow extends JFrame {
 			}
 		});
 		
-		contentPanel = new DrawingPanel();
-		contentPanel.setBounds(5, 47, 573, 409);
-		drawingPanel.add(contentPanel);
-		contentPanel.setLayout(null);
+		mainPanel = new DrawingPanel();
+		FlowLayout fl_mainPanel = (FlowLayout) mainPanel.getLayout();
+		fl_mainPanel.setHgap(0);
+		fl_mainPanel.setVgap(0);
+		mainPanel.setBounds(15, 50, 1154, 395);
+		drawingPanel.add(mainPanel);
 		
-		lblFileName = new JLabel("New label");
-		lblFileName.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-		lblFileName.setBounds(115, 5, 408, 14);
-		contentPanel.add(lblFileName);
+		contentPanel = new ContentPanel(mainPanel);
+		mainPanel.add(contentPanel);
 	}
 	
 	private void browseAction() {
@@ -163,13 +164,11 @@ public class MainWindow extends JFrame {
 	private void loadAction() {
 		fileLocation = (String) comboBox.getSelectedItem();
 		if (fileLocation == null || fileLocation == "") {
-			lblFileName.setText("No file location has been set!");
 			return;
 		}
 		List<String> file = readFile(fileLocation);
 		fileParser.setFile(file);
 		ClassObject classObject = fileParser.createClassObject();
-		lblFileName.setText(classObject.toString());
 		
 		contentPanel.addClassObject(classObject);
 	}

@@ -2,7 +2,9 @@ package com.architecture_design.app.parser;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -48,10 +50,25 @@ public class FileParser {
 		ClassObject classObject = null;
 		variableNames.clear();
 
+		Map<String, List<String>> methodMap = new HashMap<String, List<String>>();
+		String currentMethod = "";
+		boolean isMethod = false;
+
 		for (String line : file) {
 			classMatcher = classPattern.matcher(line);
 			if (classMatcher.find()) {
 				classObject = getClassObject(line);
+			} else if (isMethod) {
+				if (Pattern.compile("[^\\\\\\}]\\}").matcher(line).find())
+					isMethod = false;
+				else {
+					List<String> methodLines = methodMap.get(currentMethod);
+					if (methodLines == null) {
+						methodLines = new ArrayList<String>();
+						methodMap.put(currentMethod, methodLines);
+					}
+					methodLines.add(line);
+				}
 			} else {
 				variableMatcher = variablePattern.matcher(line.trim());
 				modifierMatcher = methodWithModifierPattern.matcher(line.trim());
@@ -60,6 +77,8 @@ public class FileParser {
 				if (modifierMatcher.find() || nonModifierMatcher.find()) {
 					MethodObject method = getMethodObject(line);
 					classObject.addMethod(method);
+					isMethod = true;
+					currentMethod = method.getName();
 				} else if (variableMatcher.find()) {
 					VariableObject variableObject = handleVariable(line);
 					if (variableObject != null) {
@@ -67,6 +86,10 @@ public class FileParser {
 					}
 				}
 			}
+		}
+		for (MethodObject method : classObject.getMethods()) {
+			List<String> methodLines = methodMap.get(method.getName());
+			method.setMethodLines(methodLines);
 		}
 
 		return classObject;
@@ -82,7 +105,7 @@ public class FileParser {
 			if (Arrays.asList(NON_ACCESS_MODIFIERS).contains(word))
 				classObject.setNonAccessModifier(word);
 			else if (word.equals("class"))
-				classObject.setClassName(words[x + 1]);
+				classObject.setName(words[x + 1]);
 			else if (word.equals("extends"))
 				classObject.setSuperClassName(words[x + 1]);
 			else if (words[x].equals("implements")) {
@@ -133,7 +156,7 @@ public class FileParser {
 		}
 		return methodParameters;
 	}
-	
+
 	private VariableObject handleVariable(String line) {
 		VariableObject variableObject = null;
 		String newLine = line;
