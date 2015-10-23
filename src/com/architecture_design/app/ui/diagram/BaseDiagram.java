@@ -1,4 +1,4 @@
-package com.architecture_design.app.shapes;
+package com.architecture_design.app.ui.diagram;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -13,7 +13,7 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.border.LineBorder;
 
 import com.architecture_design.app.classobject.BaseObject;
-import com.architecture_design.app.ui.ContentPanel;
+import com.architecture_design.app.ui.panel.ContentPanel;
 
 /**
  * @author Edward McNealy <edwardmcn64@gmail.com> - Oct 21, 2015

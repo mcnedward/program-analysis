@@ -1,4 +1,4 @@
-package com.architecture_design.app.ui;
+package com.architecture_design.app.ui.panel;
 
 import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
@@ -10,7 +10,8 @@ import javax.swing.SwingConstants;
 
 import com.architecture_design.app.classobject.ClassObject;
 import com.architecture_design.app.classobject.MethodObject;
-import com.architecture_design.app.shapes.ClassDiagram;
+import com.architecture_design.app.ui.diagram.ClassDiagram;
+import com.architecture_design.app.ui.diagram.MethodDiagram;
 
 /**
  * @author Edward McNealy <edwardmcn64@gmail.com> - Oct 20, 2015

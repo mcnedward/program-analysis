@@ -1,4 +1,4 @@
-package com.architecture_design.app.shapes;
+package com.architecture_design.app.ui.diagram;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -19,7 +19,7 @@ import com.architecture_design.app.classobject.ClassObject;
 import com.architecture_design.app.classobject.MethodObject;
 import com.architecture_design.app.classobject.MethodParameter;
 import com.architecture_design.app.classobject.VariableObject;
-import com.architecture_design.app.ui.ContentPanel;
+import com.architecture_design.app.ui.panel.ContentPanel;
 
 /**
  * @author Edward McNealy <edwardmcn64@gmail.com> - Oct 18, 2015
@@ -52,7 +52,7 @@ public class ClassDiagram extends BaseDiagram<ClassObject> {
 		constraints2.gridy = 1;
 		constraints2.fill = GridBagConstraints.BOTH;
 		for (VariableObject variableObject : variables) {
-			String variable = "- " + variableObject.getName() + ": " + variableObject.getReturnType();
+			String variable = "- " + variableObject.getName() + ": " + variableObject.getType();
 			JLabel label = new JLabel(variable);
 			label.setHorizontalAlignment(SwingConstants.LEFT);
 			variablePanel.add(label);

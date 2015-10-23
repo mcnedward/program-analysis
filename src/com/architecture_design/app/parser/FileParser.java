@@ -177,7 +177,7 @@ public class FileParser {
 				} else if (Arrays.asList(NON_ACCESS_MODIFIERS).contains(word)) {
 					variableObject.setNonAccessModifier(word);
 				} else if (x == words.length - 2) {
-					variableObject.setReturnType(word);
+					variableObject.setType(word);
 				} else {
 					variableObject.setName(word);
 				}

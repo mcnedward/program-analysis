@@ -116,7 +116,7 @@ public class Account extends BaseEntity implements Serializable {
 	/**
 	 * Converts an account's saved recipes into RecipeResults that can be returned to the client.
 	 */
-	public void convertRecipes() {
+	public static synchronized void convertRecipes() {
 		if (recipeResults == null)
 			recipeResults = new ArrayList<RecipeWrapper>();
 		for (Recipe recipe : recipes) {

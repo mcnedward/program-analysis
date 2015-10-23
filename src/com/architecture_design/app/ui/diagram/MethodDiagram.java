@@ -1,4 +1,4 @@
-package com.architecture_design.app.ui;
+package com.architecture_design.app.ui.diagram;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -13,7 +13,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
 import com.architecture_design.app.classobject.MethodObject;
-import com.architecture_design.app.shapes.BaseDiagram;
+import com.architecture_design.app.ui.panel.ContentPanel;
 
 /**
  * @author Edward McNealy <edwardmcn64@gmail.com> - Oct 20, 2015

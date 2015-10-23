@@ -5,9 +5,10 @@ package com.architecture_design.app.classobject;
  *
  */
 public abstract class BaseObject {
+	
 	protected String accessModifier;
 	protected String nonAccessModifier;
-	protected String returnType;
+	protected String modifiers;
 	protected String name;
 	
 	private String objectType;
@@ -24,8 +25,7 @@ public abstract class BaseObject {
 	}
 
 	/**
-	 * @param accessModifier
-	 *            the accessModifier to set
+	 * @param accessModifier the accessModifier to set
 	 */
 	public void setAccessModifier(String accessModifier) {
 		this.accessModifier = accessModifier;
@@ -39,26 +39,24 @@ public abstract class BaseObject {
 	}
 
 	/**
-	 * @param nonAccessModifier
-	 *            the nonAccessModifier to set
+	 * @param nonAccessModifier the nonAccessModifier to set
 	 */
 	public void setNonAccessModifier(String nonAccessModifier) {
 		this.nonAccessModifier = nonAccessModifier;
 	}
 
 	/**
-	 * @return the returnType
+	 * @return the modifiers
 	 */
-	public String getReturnType() {
-		return returnType;
+	public String getModifiers() {
+		return modifiers;
 	}
 
 	/**
-	 * @param returnType
-	 *            the returnType to set
+	 * @param modifiers the modifiers to set
 	 */
-	public void setReturnType(String returnType) {
-		this.returnType = returnType;
+	public void setModifiers(String modifiers) {
+		this.modifiers = modifiers;
 	}
 
 	/**
@@ -69,23 +67,17 @@ public abstract class BaseObject {
 	}
 
 	/**
-	 * @param name
-	 *            the name to set
+	 * @param name the name to set
 	 */
 	public void setName(String name) {
 		this.name = name;
 	}
-	
 
 	@Override
 	public String toString() {
 		String value = objectType + ": ";
-		if (accessModifier != null)
-			value += accessModifier + " ";
-		if (nonAccessModifier != null)
-			value += nonAccessModifier + " ";
-		if (returnType != null)
-			value += returnType + " ";
+		if (modifiers != null)
+			value += modifiers + " ";
 		if (name != null)
 			value += name;
 		return value;

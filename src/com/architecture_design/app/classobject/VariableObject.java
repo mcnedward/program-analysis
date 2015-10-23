@@ -5,6 +5,9 @@ package com.architecture_design.app.classobject;
  *
  */
 public class VariableObject extends BaseObject {
+	
+	private String type;
+	
 	public VariableObject() {
 		super("Variable");
 	}
@@ -12,5 +15,19 @@ public class VariableObject extends BaseObject {
 	public VariableObject(String variableName) {
 		this();
 		name = variableName;
+	}
+
+	/**
+	 * @return the type
+	 */
+	public String getType() {
+		return type;
+	}
+
+	/**
+	 * @param type the type to set
+	 */
+	public void setType(String type) {
+		this.type = type;
 	}
 }

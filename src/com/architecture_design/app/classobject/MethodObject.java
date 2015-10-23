@@ -9,6 +9,7 @@ import java.util.List;
  */
 public class MethodObject extends BaseObject {
 
+	private String returnType;
 	private List<MethodParameter> methodParameters;
 	private List<String> methodLines;
 
@@ -17,7 +18,26 @@ public class MethodObject extends BaseObject {
 		methodParameters = new ArrayList<MethodParameter>();
 		methodLines = new ArrayList<String>();
 	}
+	
+	public void addParameter(MethodParameter methodParameter) {
+		methodParameters.add(methodParameter);
+	}
 
+	/**
+	 * @return the returnType
+	 */
+	public String getReturnType() {
+		return returnType;
+	}
+
+	/**
+	 * @param returnType
+	 *            the returnType to set
+	 */
+	public void setReturnType(String returnType) {
+		this.returnType = returnType;
+	}
+	
 	/**
 	 * @return the methodParameters
 	 */

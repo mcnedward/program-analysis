@@ -11,37 +11,34 @@ import com.github.javaparser.ParseException;
 import com.github.javaparser.ast.CompilationUnit;
 
 /**
- * @author Edward McNealy <edwardmcn64@gmail.com> - Oct 16, 2015
+ * @author Edward McNealy <edwardmcn64@gmail.com> - Oct 23, 2015
  *
  */
-public class Main {
-
+public class Analyser {
 	private static String FILE_LOCATION = "resources/Account.java";
 
 	private static CompilationUnit cu = null;
-
 	private static ClassVisitor classVisitor;
 
-	public static void main(String[] args) {
+	public Analyser() {
+		classVisitor = new ClassVisitor();
+	}
+
+	public ClassObject analyse(String fileLocation) {
 		try {
-			initializeStuff();
+			loadFile(fileLocation);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
-		createVisitors();
 
 		classVisitor.visit(cu, null);
 		ClassObject classObject = classVisitor.getClassObject();
 
 		System.out.println(classObject.getName());
+		return classObject;
 	}
 
-	private static void createVisitors() {
-		classVisitor = new ClassVisitor();
-	}
-
-	private static void initializeStuff() throws IOException {
+	private void loadFile(String fileLocation) throws IOException {
 		FileInputStream input = null;
 		try {
 			input = new FileInputStream(FILE_LOCATION);
