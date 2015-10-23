@@ -3,6 +3,7 @@ package com.architecture_design.app.ui.panel;
 import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Insets;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -23,6 +24,8 @@ public class ContentPanel extends JPanel {
 	private JPanel parent;
 	private JPanel diagramPanel;
 	private JPanel methodPanel;
+	private JPanel wmcPanel;
+	
 	private ClassDiagram classDiagram;
 	private MethodDiagram methodDiagram;
 
@@ -30,7 +33,6 @@ public class ContentPanel extends JPanel {
 	}
 
 	public ContentPanel(JPanel parent) {
-		this();
 		this.parent = parent;
 
 		initialize();
@@ -41,13 +43,14 @@ public class ContentPanel extends JPanel {
 
 		GridBagLayout g = new GridBagLayout();
 		g.columnWidths = new int[] { parent.getWidth() / 2 - 1, parent.getWidth() / 2 - 1 };
-		g.rowHeights = new int[] { parent.getHeight() - 2 };
+		g.rowHeights = new int[] { parent.getHeight() / 2, 45 };
 		g.columnWeights = new double[] { 1.0, 1.0 };
-		g.rowWeights = new double[] { 1.0 };
+		g.rowWeights = new double[] { 1.0, 1.0 };
 		setLayout(g);
 
 		addDiagramPanel();
 		addMethodPanel();
+		addWMCPanel();
 	}
 
 	public void addClassObject(ClassObject classObject) {
@@ -125,6 +128,21 @@ public class ContentPanel extends JPanel {
 		add(methodPanel, g);
 		addPanelHeader(methodPanel, "");
 	}
+	
+	private void addWMCPanel() {
+		wmcPanel = new JPanel();
+		setPanelBounds(wmcPanel);
+		
+		GridBagConstraints g = new GridBagConstraints();
+		g.gridheight = 1;
+		g.gridwidth = 1;
+		g.gridx = 0;
+		g.gridy = 1;
+		g.insets = new Insets(15, 5, 5, 5);
+		g.fill = GridBagConstraints.BOTH;
+
+		add(wmcPanel, g);
+	}
 
 	private void addPanelHeader(JPanel parent, String text) {
 		JPanel panel = new JPanel();
@@ -175,6 +193,20 @@ public class ContentPanel extends JPanel {
 	 */
 	public void setMethodPanel(JPanel methodPanel) {
 		this.methodPanel = methodPanel;
+	}
+
+	/**
+	 * @return the wmcPanel
+	 */
+	public JPanel getWmcPanel() {
+		return wmcPanel;
+	}
+
+	/**
+	 * @param wmcPanel the wmcPanel to set
+	 */
+	public void setWmcPanel(JPanel wmcPanel) {
+		this.wmcPanel = wmcPanel;
 	}
 
 	/**

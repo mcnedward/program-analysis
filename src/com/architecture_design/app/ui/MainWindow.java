@@ -22,6 +22,7 @@ import javax.swing.border.EmptyBorder;
 import com.architecture_design.app.Analyser;
 import com.architecture_design.app.classobject.ClassObject;
 import com.architecture_design.app.ui.panel.ContentPanel;
+import javax.swing.BoxLayout;
 
 /**
  * @author Edward McNealy <edwardmcn64@gmail.com> - Oct 18, 2015
@@ -85,7 +86,7 @@ public class MainWindow extends JFrame {
 			e.printStackTrace();
 			System.out.println("Something went wrong when trying to use the System Look and Feel...");
 		}
-		setBounds(100, 100, 1200, 500);
+		setBounds(100, 100, 1200, 800);
 		drawingPanel = new JPanel();
 		drawingPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(drawingPanel);
@@ -137,11 +138,12 @@ public class MainWindow extends JFrame {
 		FlowLayout fl_mainPanel = (FlowLayout) mainPanel.getLayout();
 		fl_mainPanel.setHgap(0);
 		fl_mainPanel.setVgap(0);
-		mainPanel.setBounds(15, 50, 1154, 395);
+		mainPanel.setBounds(15, 50, 1154, 700);
 		drawingPanel.add(mainPanel);
 
 		contentPanel = new ContentPanel(mainPanel);
 		mainPanel.add(contentPanel);
+		contentPanel.getWmcPanel().setLayout(new BoxLayout(contentPanel.getWmcPanel(), BoxLayout.X_AXIS));
 	}
 
 	private void browseAction() {
