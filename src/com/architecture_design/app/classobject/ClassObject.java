@@ -11,16 +11,21 @@ public class ClassObject extends BaseObject {
 
 	private String accessModifier;
 	private String nonAccessModifier;
-	private String superClassName;
+	private List<String> extendsList;
 	private List<String> interfaces;
 	private List<MethodObject> methods;
 	private List<VariableObject> variables;
 
 	public ClassObject() {
 		super("class");
+		extendsList = new ArrayList<String>();
 		interfaces = new ArrayList<String>();
 		methods = new ArrayList<MethodObject>();
 		variables = new ArrayList<VariableObject>();
+	}
+	
+	public void addExtends(String extendsName) {
+		extendsList.add(extendsName);
 	}
 
 	public void addInterface(String interfaceName) {
@@ -34,7 +39,7 @@ public class ClassObject extends BaseObject {
 	public void addVariable(VariableObject variable) {
 		variables.add(variable);
 	}
-	
+
 	public MethodObject getMethodByName(String methodName) {
 		int index = methods.indexOf(methodName);
 		if (index < 0) {
@@ -75,18 +80,18 @@ public class ClassObject extends BaseObject {
 	}
 
 	/**
-	 * @return the superClassName
+	 * @return the extendsList
 	 */
-	public String getSuperClassName() {
-		return superClassName;
+	public List<String> getExtendsList() {
+		return extendsList;
 	}
 
 	/**
-	 * @param superClassName
-	 *            the superClassName to set
+	 * @param extendsList
+	 *            the extendsList to set
 	 */
-	public void setSuperClassName(String superClassName) {
-		this.superClassName = superClassName;
+	public void setExtendsList(List<String> extendsList) {
+		this.extendsList = extendsList;
 	}
 
 	/**
@@ -143,8 +148,14 @@ public class ClassObject extends BaseObject {
 			value += nonAccessModifier + " ";
 		if (name != null)
 			value += name + " ";
-		if (superClassName != null)
-			value += "extends " + superClassName;
+		if (!extendsList.isEmpty()) {
+			value += " extends ";
+			for (int x = 0; x < extendsList.size(); x++) {
+				value += extendsList.get(x);
+				if (x != extendsList.size() - 1)
+					value += ", ";
+			}
+		}
 		if (!interfaces.isEmpty()) {
 			value += " implements ";
 			for (int x = 0; x < interfaces.size(); x++) {

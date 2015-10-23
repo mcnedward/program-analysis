@@ -106,8 +106,10 @@ public class FileParser {
 				classObject.setNonAccessModifier(word);
 			else if (word.equals("class"))
 				classObject.setName(words[x + 1]);
-			else if (word.equals("extends"))
-				classObject.setSuperClassName(words[x + 1]);
+			else if (word.equals("extends")) {
+				for (int y = x + 1; y < words.length; y++)
+					classObject.addExtends(words[y]);
+			}
 			else if (words[x].equals("implements")) {
 				for (int y = x + 1; y < words.length; y++)
 					classObject.addInterface(words[y]);

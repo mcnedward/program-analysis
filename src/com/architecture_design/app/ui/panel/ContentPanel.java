@@ -3,7 +3,6 @@ package com.architecture_design.app.ui.panel;
 import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.Insets;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -13,6 +12,7 @@ import com.architecture_design.app.classobject.ClassObject;
 import com.architecture_design.app.classobject.MethodObject;
 import com.architecture_design.app.ui.diagram.ClassDiagram;
 import com.architecture_design.app.ui.diagram.MethodDiagram;
+import com.architecture_design.app.ui.diagram.MetricsDiagram;
 
 /**
  * @author Edward McNealy <edwardmcn64@gmail.com> - Oct 20, 2015
@@ -24,10 +24,14 @@ public class ContentPanel extends JPanel {
 	private JPanel parent;
 	private JPanel diagramPanel;
 	private JPanel methodPanel;
+	private JPanel metricsPanel;
+	
 	private JPanel wmcPanel;
+	private JPanel ditPanel;
 	
 	private ClassDiagram classDiagram;
 	private MethodDiagram methodDiagram;
+	private MetricsDiagram metricsDiagram;
 
 	public ContentPanel() {
 	}
@@ -43,28 +47,34 @@ public class ContentPanel extends JPanel {
 
 		GridBagLayout g = new GridBagLayout();
 		g.columnWidths = new int[] { parent.getWidth() / 2 - 1, parent.getWidth() / 2 - 1 };
-		g.rowHeights = new int[] { parent.getHeight() / 2, 45 };
+		g.rowHeights = new int[] { parent.getHeight() / 2, parent.getHeight() / 4 };
 		g.columnWeights = new double[] { 1.0, 1.0 };
 		g.rowWeights = new double[] { 1.0, 1.0 };
 		setLayout(g);
 
 		addDiagramPanel();
 		addMethodPanel();
-		addWMCPanel();
+		addMetricsPanel();
 	}
 
 	public void addClassObject(ClassObject classObject) {
 		if (classDiagram != null) {
 			System.out.println("Removing class diagram for: " + classObject.getName());
-			diagramPanel.remove(classDiagram);
+			diagramPanel.removeAll();
+			
 			methodPanel.removeAll();
 			addPanelHeader(methodPanel, "Select a method to view the definition.");
+			
+			metricsPanel.removeAll();
 		}
 
 		classDiagram = new ClassDiagram(this, classObject);
 		diagramPanel.add(classDiagram);
 		removePanelHeader(diagramPanel);
 		updatePanelHeader(methodPanel, "Select a method to view the definition.");
+		
+		metricsDiagram = new MetricsDiagram(classObject);
+		metricsPanel.add(metricsDiagram);
 
 		revalidate();
 		repaint();
@@ -129,19 +139,19 @@ public class ContentPanel extends JPanel {
 		addPanelHeader(methodPanel, "");
 	}
 	
-	private void addWMCPanel() {
-		wmcPanel = new JPanel();
-		setPanelBounds(wmcPanel);
+	private void addMetricsPanel() {
+		metricsPanel = new JPanel();
+		setPanelBounds(metricsPanel);
+		methodPanel.setLayout(null);
 		
 		GridBagConstraints g = new GridBagConstraints();
 		g.gridheight = 1;
 		g.gridwidth = 1;
 		g.gridx = 0;
 		g.gridy = 1;
-		g.insets = new Insets(15, 5, 5, 5);
 		g.fill = GridBagConstraints.BOTH;
 
-		add(wmcPanel, g);
+		add(metricsPanel, g);
 	}
 
 	private void addPanelHeader(JPanel parent, String text) {
@@ -207,6 +217,20 @@ public class ContentPanel extends JPanel {
 	 */
 	public void setWmcPanel(JPanel wmcPanel) {
 		this.wmcPanel = wmcPanel;
+	}
+
+	/**
+	 * @return the ditPanel
+	 */
+	public JPanel getDitPanel() {
+		return ditPanel;
+	}
+
+	/**
+	 * @param ditPanel the ditPanel to set
+	 */
+	public void setDitPanel(JPanel ditPanel) {
+		this.ditPanel = ditPanel;
 	}
 
 	/**

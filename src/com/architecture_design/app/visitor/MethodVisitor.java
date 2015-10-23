@@ -6,6 +6,8 @@ import java.util.List;
 
 import com.architecture_design.app.classobject.MethodObject;
 import com.architecture_design.app.classobject.MethodParameter;
+import com.github.javaparser.ast.Node;
+import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
 import com.github.javaparser.ast.body.MethodDeclaration;
 import com.github.javaparser.ast.body.Parameter;
 import com.github.javaparser.ast.stmt.BlockStmt;
@@ -22,6 +24,11 @@ public class MethodVisitor extends BaseVisitor<MethodObject> {
 		super();
 		methodObjects = new ArrayList<MethodObject>();
 	}
+	
+	@Override
+	public void reset() {
+		methodObjects = new ArrayList<MethodObject>();
+	}
 
 	@Override
 	public void visit(MethodDeclaration n, MethodObject arg) {
@@ -32,7 +39,12 @@ public class MethodVisitor extends BaseVisitor<MethodObject> {
 		for (Parameter p : n.getParameters()) {
 			p.accept(this, methodObject);
 		}
-		n.getBody().accept(this, methodObject);
+		Node parent = n.getParentNode();
+		if (parent instanceof ClassOrInterfaceDeclaration) {
+			if (!((ClassOrInterfaceDeclaration) parent).isInterface() && !n.toString().contains("abstract")) {
+				n.getBody().accept(this, methodObject);
+			}
+		}
 		methodObjects.add(methodObject);
 	}
 

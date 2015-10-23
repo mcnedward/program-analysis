@@ -22,7 +22,6 @@ import javax.swing.border.EmptyBorder;
 import com.architecture_design.app.Analyser;
 import com.architecture_design.app.classobject.ClassObject;
 import com.architecture_design.app.ui.panel.ContentPanel;
-import javax.swing.BoxLayout;
 
 /**
  * @author Edward McNealy <edwardmcn64@gmail.com> - Oct 18, 2015
@@ -98,7 +97,7 @@ public class MainWindow extends JFrame {
 		drawingPanel.setLayout(null);
 
 		filePanel = new JPanel();
-		filePanel.setBounds(5, 5, 573, 29);
+		filePanel.setBounds(5, 5, 700, 30);
 		drawingPanel.add(filePanel);
 		filePanel.setLayout(new GridLayout(2, 1, 0, 0));
 		filePanel.setLayout(new BorderLayout(0, 0));
@@ -143,7 +142,6 @@ public class MainWindow extends JFrame {
 
 		contentPanel = new ContentPanel(mainPanel);
 		mainPanel.add(contentPanel);
-		contentPanel.getWmcPanel().setLayout(new BoxLayout(contentPanel.getWmcPanel(), BoxLayout.X_AXIS));
 	}
 
 	private void browseAction() {

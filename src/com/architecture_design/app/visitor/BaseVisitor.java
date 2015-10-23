@@ -13,6 +13,8 @@ public abstract class BaseVisitor<T> extends VoidVisitorAdapter<T> {
 
 	}
 	
+	public abstract void reset();
+	
 	// Adapted from DumpVisitor
     protected String decodeModifiers(final int modifiers) {
 		if (ModifierSet.isPrivate(modifiers)) {

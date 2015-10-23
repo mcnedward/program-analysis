@@ -15,10 +15,9 @@ import com.github.javaparser.ast.CompilationUnit;
  *
  */
 public class Analyser {
-	private static String FILE_LOCATION = "resources/Account.java";
 
-	private static CompilationUnit cu = null;
-	private static ClassVisitor classVisitor;
+	private CompilationUnit cu = null;
+	private ClassVisitor classVisitor;
 
 	public Analyser() {
 		classVisitor = new ClassVisitor();
@@ -31,6 +30,7 @@ public class Analyser {
 			e.printStackTrace();
 		}
 
+		classVisitor.reset();
 		classVisitor.visit(cu, null);
 		ClassObject classObject = classVisitor.getClassObject();
 
@@ -39,14 +39,15 @@ public class Analyser {
 	}
 
 	private void loadFile(String fileLocation) throws IOException {
+		System.out.println("Loading file: " + fileLocation);
 		FileInputStream input = null;
 		try {
-			input = new FileInputStream(FILE_LOCATION);
+			input = new FileInputStream(fileLocation);
 			cu = JavaParser.parse(input);
 		} catch (ParseException e) {
 			e.printStackTrace();
 		} catch (FileNotFoundException e) {
-			System.out.println("File not found: " + FILE_LOCATION + "...");
+			System.out.println("File not found: " + fileLocation + "...");
 		} finally {
 			if (input != null)
 				input.close();

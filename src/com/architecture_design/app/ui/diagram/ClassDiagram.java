@@ -37,8 +37,6 @@ public class ClassDiagram extends BaseDiagram<ClassObject> {
 
 		createVariablePanels();
 		createMethodPanels();
-		
-		updateWMCPanel();
 	}
 
 	private void createVariablePanels() {
@@ -48,13 +46,13 @@ public class ClassDiagram extends BaseDiagram<ClassObject> {
 		JPanel variablePanel = new JPanel();
 		variablePanel.setLayout(new BoxLayout(variablePanel, BoxLayout.Y_AXIS));
 		variablePanel.setBorder(new LineBorder(Color.BLACK));
-		
+
 		GridBagConstraints constraints2 = new GridBagConstraints();
 		constraints2.gridwidth = 1;
 		constraints2.gridx = 0;
 		constraints2.gridy = 1;
 		constraints2.fill = GridBagConstraints.BOTH;
-		
+
 		for (VariableObject variableObject : variables) {
 			String variable = "- " + variableObject.getName() + ": " + variableObject.getType();
 			JLabel label = new JLabel(variable);
@@ -71,13 +69,13 @@ public class ClassDiagram extends BaseDiagram<ClassObject> {
 		JPanel methodPanel = new JPanel();
 		methodPanel.setLayout(new BoxLayout(methodPanel, BoxLayout.Y_AXIS));
 		methodPanel.setBorder(new LineBorder(Color.BLACK));
-		
+
 		GridBagConstraints constraints = new GridBagConstraints();
 		constraints.gridwidth = 1;
 		constraints.gridx = 0;
 		constraints.gridy = 2;
 		constraints.fill = GridBagConstraints.BOTH;
-		
+
 		for (MethodObject methodObject : methods) {
 			JPanel panel = new JPanel();
 			panel.setLayout(new BorderLayout());
@@ -104,22 +102,6 @@ public class ClassDiagram extends BaseDiagram<ClassObject> {
 			methodPanel.add(panel);
 		}
 		mainPanel.add(methodPanel, constraints);
-	}
-	
-	private void updateWMCPanel() {
-		JPanel wmcPanel = parent.getWmcPanel();
-
-		GridBagConstraints constraints = new GridBagConstraints();
-		constraints.gridwidth = 1;
-		constraints.gridx = 0;
-		constraints.gridy = 0;
-		constraints.fill = GridBagConstraints.WEST;
-
-		int wmc = typeObject.getMethods().size();		
-		JLabel label = new JLabel("WMC = " + wmc);
-		label.setBounds(0, 0, wmcPanel.getWidth(), 30);
-		label.setHorizontalAlignment(SwingConstants.LEFT);
-		wmcPanel.add(label);
 	}
 
 	private void addMethodListener(JPanel panel) {

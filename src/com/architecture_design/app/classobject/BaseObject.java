@@ -77,7 +77,7 @@ public abstract class BaseObject {
 	public String toString() {
 		String value = objectType + ": ";
 		if (modifiers != null)
-			value += modifiers + " ";
+			value += modifiers;
 		if (name != null)
 			value += name;
 		return value;

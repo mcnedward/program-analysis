@@ -20,6 +20,11 @@ public class VariableVisitor extends BaseVisitor<VariableObject> {
 		super();
 		variableObjects = new ArrayList<VariableObject>();
 	}
+	
+	@Override
+	public void reset() {
+		variableObjects = new ArrayList<VariableObject>();
+	}
 
 	@Override
 	public void visit(FieldDeclaration n, VariableObject arg) {
