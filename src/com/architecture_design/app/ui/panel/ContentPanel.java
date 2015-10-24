@@ -46,7 +46,7 @@ public class ContentPanel extends JPanel {
 		setBounds(parent.getX(), parent.getY(), parent.getWidth(), parent.getHeight());
 
 		GridBagLayout g = new GridBagLayout();
-		g.columnWidths = new int[] { parent.getWidth() / 2 - 1, parent.getWidth() / 2 - 1 };
+		g.columnWidths = new int[] { parent.getWidth() / 2, parent.getWidth() / 2 };
 		g.rowHeights = new int[] { parent.getHeight() / 2, parent.getHeight() / 4 };
 		g.columnWeights = new double[] { 1.0, 1.0 };
 		g.rowWeights = new double[] { 1.0, 1.0 };

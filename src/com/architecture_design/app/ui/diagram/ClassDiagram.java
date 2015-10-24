@@ -142,6 +142,6 @@ public class ClassDiagram extends BaseDiagram<ClassObject> {
 		height = ((typeObject.getVariables().size() + typeObject.getMethods().size()) * 30) + 30;
 		if (height > parent.getDiagramPanel().getHeight())
 			height = parent.getDiagramPanel().getHeight();
-		width = 500;
+		width = 450;
 	}
 }

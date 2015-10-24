@@ -71,7 +71,7 @@ public class MethodDiagram extends BaseDiagram<MethodObject> {
 		height = (typeObject.getMethodLines().size() * 40) + 30;
 		if (height > parent.getDiagramPanel().getHeight())
 			height = parent.getDiagramPanel().getHeight();
-		width = 500;
+		width = 450;
 	}
 
 }
