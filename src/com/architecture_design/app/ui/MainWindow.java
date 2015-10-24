@@ -87,6 +87,8 @@ public class MainWindow extends JFrame {
 	}
 
 	private void findResources() {
+		// TODO Remove this hard-coded value
+		comboBox.addItem("C:\\Users\\Edward\\Dev\\Workspace");
 		File resourceDir = new File("resources");
 		for (File file : resourceDir.listFiles()) {
 			comboBox.addItem(file.getAbsolutePath());
@@ -101,7 +103,7 @@ public class MainWindow extends JFrame {
 			e.printStackTrace();
 			System.out.println("Something went wrong when trying to use the System Look and Feel...");
 		}
-		setBounds(100, 100, 1200, 600);
+		setBounds(100, 100, 1200, 650);
 		drawingPanel = new JPanel();
 		drawingPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(drawingPanel);
@@ -196,7 +198,7 @@ public class MainWindow extends JFrame {
 		drawingPanel.add(messagePanel);
 		messagePanel.setLayout(new BorderLayout(0, 0));
 
-		lblMessage = new JLabel("");
+		lblMessage = new JLabel("Load a java file or project.");
 		lblMessage.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		lblMessage.setHorizontalAlignment(SwingConstants.LEFT);
 		messagePanel.add(lblMessage);
@@ -254,8 +256,15 @@ public class MainWindow extends JFrame {
 	}
 
 	private void load(File file, boolean clearList) {
+		// Check if file is already loaded
+		for (int x = 0; x < listModel.size(); x++) {
+			if (listModel.getElementAt(x).equals(file)) {
+				contentPanel.loadClassObjectForFile(file);
+				return;
+			}
+		}
 		List<ClassObject> classObjects = analyser.analyse(file);
-		contentPanel.addClassObject(classObjects.get(0));
+		contentPanel.loadClassObjects(classObjects);
 
 		if (clearList)
 			listModel.clear();

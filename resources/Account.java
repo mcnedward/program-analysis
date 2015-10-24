@@ -128,6 +128,7 @@ public class Account extends BaseEntity implements Serializable {
 
 	public void addRecipe(Recipe recipe) {
 		this.recipes.add(recipe);
+		recipes.add(recipe);
 		if (!recipe.getAccounts().contains(this)) {
 			recipe.getAccounts().add(this);
 		}

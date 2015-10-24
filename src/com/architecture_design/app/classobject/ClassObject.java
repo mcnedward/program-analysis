@@ -1,5 +1,6 @@
 package com.architecture_design.app.classobject;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,6 +16,8 @@ public class ClassObject extends BaseObject {
 	private List<String> interfaces;
 	private List<MethodObject> methods;
 	private List<VariableObject> variables;
+	
+	private File sourceFile;
 
 	public ClassObject() {
 		super("class");
@@ -41,12 +44,11 @@ public class ClassObject extends BaseObject {
 	}
 
 	public MethodObject getMethodByName(String methodName) {
-		int index = methods.indexOf(methodName);
-		if (index < 0) {
-			System.out.println("There is no method with the name: " + methodName);
-			return null;
+		for (MethodObject method : methods) {
+			if (method.getName().equals(methodName))
+				return method;
 		}
-		return methods.get(index);
+		return null;
 	}
 
 	/**
@@ -137,6 +139,20 @@ public class ClassObject extends BaseObject {
 	 */
 	public void setVariables(List<VariableObject> variables) {
 		this.variables = variables;
+	}
+
+	/**
+	 * @return the sourceFile
+	 */
+	public File getSourceFile() {
+		return sourceFile;
+	}
+
+	/**
+	 * @param sourceFile the sourceFile to set
+	 */
+	public void setSourceFile(File sourceFile) {
+		this.sourceFile = sourceFile;
 	}
 
 	@Override

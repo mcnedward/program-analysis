@@ -13,14 +13,21 @@ public class MethodObject extends BaseObject {
 	private List<MethodParameter> methodParameters;
 	private List<String> methodLines;
 
+	private List<MethodCallObject> methodCallObjects;
+
 	public MethodObject() {
 		super("Method");
 		methodParameters = new ArrayList<MethodParameter>();
 		methodLines = new ArrayList<String>();
+		methodCallObjects = new ArrayList<MethodCallObject>();
 	}
-	
+
 	public void addParameter(MethodParameter methodParameter) {
 		methodParameters.add(methodParameter);
+	}
+
+	public void addMethodCallObject(MethodCallObject methodCallObject) {
+		methodCallObjects.add(methodCallObject);
 	}
 
 	/**
@@ -37,7 +44,7 @@ public class MethodObject extends BaseObject {
 	public void setReturnType(String returnType) {
 		this.returnType = returnType;
 	}
-	
+
 	/**
 	 * @return the methodParameters
 	 */
@@ -61,10 +68,26 @@ public class MethodObject extends BaseObject {
 	}
 
 	/**
-	 * @param methodLines the methodLines to set
+	 * @param methodLines
+	 *            the methodLines to set
 	 */
 	public void setMethodLines(List<String> methodLines) {
 		this.methodLines = methodLines;
+	}
+
+	/**
+	 * @return the methodCallObjects
+	 */
+	public List<MethodCallObject> getMethodCallObjects() {
+		return methodCallObjects;
+	}
+
+	/**
+	 * @param methodCallObjects
+	 *            the methodCallObjects to set
+	 */
+	public void setMethodCallObjects(List<MethodCallObject> methodCallObjects) {
+		this.methodCallObjects = methodCallObjects;
 	}
 
 }

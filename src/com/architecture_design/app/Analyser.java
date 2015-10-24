@@ -18,40 +18,55 @@ import com.github.javaparser.ast.CompilationUnit;
  */
 public class Analyser {
 
-	private List<CompilationUnit> compilationUnits;
+	private List<CompilationHolder> compilationHolders;
 	private List<File> files;
 
 	private ClassVisitor classVisitor;
 	private List<ClassObject> classObjects;
 
 	public Analyser() {
-		compilationUnits = new ArrayList<CompilationUnit>();
+		compilationHolders = new ArrayList<CompilationHolder>();
 		files = new ArrayList<File>();
 		classVisitor = new ClassVisitor();
 		classObjects = new ArrayList<ClassObject>();
 	}
 
+	/**
+	 * Analyse the file or directory. This will create a List of ClassObjects for every Java item in the File.
+	 * 
+	 * @param file
+	 *            The file or directory.
+	 * @return A List of all the ClassObjects in the file or directory.
+	 */
 	public List<ClassObject> analyse(File file) {
-		compilationUnits.clear();
+		compilationHolders.clear();
 		classObjects.clear();
 		files.clear();
-		
+
 		try {
 			loadFile(file);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 
-		for (CompilationUnit cu : compilationUnits) {
+		for (CompilationHolder holder : compilationHolders) {
 			classVisitor.reset();
-			classVisitor.visit(cu, null);
+			classVisitor.visit(holder.compilationUnit, null);
 			ClassObject classObject = classVisitor.getClassObject();
+			classObject.setSourceFile(holder.file);
 			classObjects.add(classObject);
 		}
 
 		return classObjects;
 	}
 
+	/**
+	 * Loads the file or directory and creates the CompilationUnits.
+	 * 
+	 * @param selectedFile
+	 *            The selected file or directory.
+	 * @throws IOException
+	 */
 	private void loadFile(File selectedFile) throws IOException {
 		System.out.println("Loading: " + selectedFile.getName());
 
@@ -63,7 +78,7 @@ public class Analyser {
 		try {
 			for (File file : files) {
 				CompilationUnit cu = JavaParser.parse(file);
-				compilationUnits.add(cu);
+				compilationHolders.add(new CompilationHolder(cu, file));
 			}
 		} catch (ParseException e) {
 			e.printStackTrace();
@@ -89,5 +104,15 @@ public class Analyser {
 	 */
 	public List<File> getFiles() {
 		return files;
+	}
+}
+
+class CompilationHolder {
+	protected CompilationUnit compilationUnit;
+	protected File file;
+
+	protected CompilationHolder(CompilationUnit cu, File file) {
+		compilationUnit = cu;
+		this.file = file;
 	}
 }

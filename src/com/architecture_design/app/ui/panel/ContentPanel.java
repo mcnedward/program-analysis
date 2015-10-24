@@ -3,6 +3,8 @@ package com.architecture_design.app.ui.panel;
 import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.io.File;
+import java.util.List;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -32,9 +34,8 @@ public class ContentPanel extends JPanel {
 	private ClassDiagram classDiagram;
 	private MethodDiagram methodDiagram;
 	private MetricsDiagram metricsDiagram;
-
-	public ContentPanel() {
-	}
+	
+	private List<ClassObject> classObjects;
 
 	public ContentPanel(JPanel parent) {
 		this.parent = parent;
@@ -56,8 +57,26 @@ public class ContentPanel extends JPanel {
 		addMethodPanel();
 		addMetricsPanel();
 	}
+	
+	public void loadClassObjects(List<ClassObject> classObjects) {
+		this.classObjects = classObjects;
+		loadClassObject(classObjects.get(0));
+	}
+	
+	public void loadClassObjectForFile(File file) {
+		if (classObjects == null || classObjects.isEmpty()) {
+			System.out.println("No class objects...");
+		}
+		for (ClassObject classObject : classObjects) {
+			if (classObject.getSourceFile().equals(file)) {
+				loadClassObject(classObject);
+				return;
+			}
+		}
+		System.out.println("File " + file.getName() + " is not found in class objects.");
+	}
 
-	public void addClassObject(ClassObject classObject) {
+	private void loadClassObject(ClassObject classObject) {
 		if (classDiagram != null) {
 			System.out.println("Removing class diagram for: " + classObject.getName());
 			diagramPanel.removeAll();
@@ -70,10 +89,9 @@ public class ContentPanel extends JPanel {
 
 		classDiagram = new ClassDiagram(this, classObject);
 		diagramPanel.add(classDiagram);
-		removePanelHeader(diagramPanel);
 		updatePanelHeader(methodPanel, "Select a method to view the definition.");
 		
-		metricsDiagram = new MetricsDiagram(classObject);
+		metricsDiagram = new MetricsDiagram(this, classObject);
 		metricsPanel.add(metricsDiagram);
 
 		revalidate();
@@ -120,7 +138,6 @@ public class ContentPanel extends JPanel {
 		g.fill = GridBagConstraints.BOTH;
 
 		add(diagramPanel, g);
-		addPanelHeader(diagramPanel, "Select a java file to load a class diagram.");
 	}
 
 	private void addMethodPanel() {
@@ -246,6 +263,20 @@ public class ContentPanel extends JPanel {
 	 */
 	public void setClassDiagram(ClassDiagram classDiagram) {
 		this.classDiagram = classDiagram;
+	}
+
+	/**
+	 * @return the classObjects
+	 */
+	public List<ClassObject> getClassObjects() {
+		return classObjects;
+	}
+
+	/**
+	 * @param classObjects the classObjects to set
+	 */
+	public void setClassObjects(List<ClassObject> classObjects) {
+		this.classObjects = classObjects;
 	}
 
 }
