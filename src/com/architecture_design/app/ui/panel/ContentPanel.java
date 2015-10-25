@@ -13,6 +13,7 @@ import javax.swing.SwingConstants;
 import com.architecture_design.app.classobject.ClassObject;
 import com.architecture_design.app.classobject.method.MethodObject;
 import com.architecture_design.app.ui.diagram.ClassDiagram;
+import com.architecture_design.app.ui.diagram.FlowGraphDiagram;
 import com.architecture_design.app.ui.diagram.MethodDiagram;
 import com.architecture_design.app.ui.diagram.MetricsDiagram;
 
@@ -27,14 +28,16 @@ public class ContentPanel extends JPanel {
 	private JPanel diagramPanel;
 	private JPanel methodPanel;
 	private JPanel metricsPanel;
-	
+	private JPanel flowGraphPanel;
+
 	private JPanel wmcPanel;
 	private JPanel ditPanel;
-	
+
 	private ClassDiagram classDiagram;
 	private MethodDiagram methodDiagram;
 	private MetricsDiagram metricsDiagram;
-	
+	private FlowGraphDiagram flowGraphDiagram;
+
 	private List<ClassObject> classObjects;
 
 	public ContentPanel(JPanel parent) {
@@ -48,7 +51,7 @@ public class ContentPanel extends JPanel {
 
 		GridBagLayout g = new GridBagLayout();
 		g.columnWidths = new int[] { parent.getWidth() / 2, parent.getWidth() / 2 };
-		g.rowHeights = new int[] { parent.getHeight() / 2, parent.getHeight() / 4 };
+		g.rowHeights = new int[] { parent.getHeight() / 2, parent.getHeight() / 2 };
 		g.columnWeights = new double[] { 1.0, 1.0 };
 		g.rowWeights = new double[] { 1.0, 1.0 };
 		setLayout(g);
@@ -56,13 +59,14 @@ public class ContentPanel extends JPanel {
 		addDiagramPanel();
 		addMethodPanel();
 		addMetricsPanel();
+		addFlowGraphPanel();
 	}
-	
+
 	public void loadClassObjects(List<ClassObject> classObjects) {
 		this.classObjects = classObjects;
 		loadClassObject(classObjects.get(0));
 	}
-	
+
 	public void loadClassObjectForFile(File file) {
 		if (classObjects == null || classObjects.isEmpty()) {
 			System.out.println("No class objects...");
@@ -80,17 +84,19 @@ public class ContentPanel extends JPanel {
 		if (classDiagram != null) {
 			System.out.println("Removing class diagram for: " + classObject.getName());
 			diagramPanel.removeAll();
-			
+
 			methodPanel.removeAll();
 			addPanelHeader(methodPanel, "Select a method to view the definition.");
-			
+
+			flowGraphPanel.removeAll();
+
 			metricsPanel.removeAll();
 		}
 
 		classDiagram = new ClassDiagram(this, classObject);
 		diagramPanel.add(classDiagram);
 		updatePanelHeader(methodPanel, "Select a method to view the definition.");
-		
+
 		metricsDiagram = new MetricsDiagram(this, classObject);
 		metricsPanel.add(metricsDiagram);
 
@@ -104,15 +110,21 @@ public class ContentPanel extends JPanel {
 			System.out.println("Removing method diagram for: " + methodObject.getName());
 			methodPanel.remove(methodDiagram);
 		}
+		if (flowGraphDiagram != null) {
+			flowGraphPanel.remove(flowGraphDiagram);
+		}
 		methodDiagram = new MethodDiagram(this, methodObject);
 		methodPanel.add(methodDiagram);
 		removePanelHeader(methodPanel);
+
+		flowGraphDiagram = new FlowGraphDiagram(this, methodObject);
+		flowGraphPanel.add(flowGraphDiagram);
 
 		revalidate();
 		repaint();
 		System.out.println("Loading method diagram for: " + methodObject.getName());
 	}
-	
+
 	private void removePanelHeader(JPanel parent) {
 		JPanel panel = (JPanel) parent.getClientProperty("header");
 		if (panel != null)
@@ -144,7 +156,7 @@ public class ContentPanel extends JPanel {
 		methodPanel = new JPanel();
 		setPanelBounds(methodPanel);
 		methodPanel.setLayout(null); // Set to AbsoluteLayout
-		
+
 		GridBagConstraints g = new GridBagConstraints();
 		g.gridheight = 1;
 		g.gridwidth = 1;
@@ -155,12 +167,12 @@ public class ContentPanel extends JPanel {
 		add(methodPanel, g);
 		addPanelHeader(methodPanel, "");
 	}
-	
+
 	private void addMetricsPanel() {
 		metricsPanel = new JPanel();
 		setPanelBounds(metricsPanel);
 		methodPanel.setLayout(null);
-		
+
 		GridBagConstraints g = new GridBagConstraints();
 		g.gridheight = 1;
 		g.gridwidth = 1;
@@ -171,6 +183,21 @@ public class ContentPanel extends JPanel {
 		add(metricsPanel, g);
 	}
 
+	private void addFlowGraphPanel() {
+		flowGraphPanel = new JPanel();
+		setPanelBounds(flowGraphPanel);
+		flowGraphPanel.setLayout(null);
+
+		GridBagConstraints g = new GridBagConstraints();
+		g.gridheight = 1;
+		g.gridwidth = 1;
+		g.gridx = 1;
+		g.gridy = 1;
+		g.fill = GridBagConstraints.BOTH;
+
+		add(flowGraphPanel, g);
+	}
+
 	private void addPanelHeader(JPanel parent, String text) {
 		JPanel panel = new JPanel();
 		parent.add(panel);
@@ -179,14 +206,14 @@ public class ContentPanel extends JPanel {
 		label.setHorizontalAlignment(SwingConstants.CENTER);
 		panel.add(label);
 		panel.setBounds(0, 0, parent.getWidth(), 30);
-		
+
 		// Save a reference to the header to allow for updates and removal
 		parent.putClientProperty("header", panel);
 	}
 
 	private void setPanelBounds(JPanel panel) {
 		int width = (getWidth() / 2);
-		int height = getHeight();
+		int height = getHeight() / 2;
 		int x = (width / 2) - (width / 4);
 		int y = (height / 2) - (height / 4);
 		panel.setBounds(x, y, width, height);
@@ -223,6 +250,21 @@ public class ContentPanel extends JPanel {
 	}
 
 	/**
+	 * @return the flowGraphPanel
+	 */
+	public JPanel getFlowGraphPanel() {
+		return flowGraphPanel;
+	}
+
+	/**
+	 * @param flowGraphPanel
+	 *            the flowGraphPanel to set
+	 */
+	public void setFlowGraphPanel(JPanel flowGraphPanel) {
+		this.flowGraphPanel = flowGraphPanel;
+	}
+
+	/**
 	 * @return the wmcPanel
 	 */
 	public JPanel getWmcPanel() {
@@ -230,7 +272,8 @@ public class ContentPanel extends JPanel {
 	}
 
 	/**
-	 * @param wmcPanel the wmcPanel to set
+	 * @param wmcPanel
+	 *            the wmcPanel to set
 	 */
 	public void setWmcPanel(JPanel wmcPanel) {
 		this.wmcPanel = wmcPanel;
@@ -244,7 +287,8 @@ public class ContentPanel extends JPanel {
 	}
 
 	/**
-	 * @param ditPanel the ditPanel to set
+	 * @param ditPanel
+	 *            the ditPanel to set
 	 */
 	public void setDitPanel(JPanel ditPanel) {
 		this.ditPanel = ditPanel;
@@ -273,7 +317,8 @@ public class ContentPanel extends JPanel {
 	}
 
 	/**
-	 * @param classObjects the classObjects to set
+	 * @param classObjects
+	 *            the classObjects to set
 	 */
 	public void setClassObjects(List<ClassObject> classObjects) {
 		this.classObjects = classObjects;

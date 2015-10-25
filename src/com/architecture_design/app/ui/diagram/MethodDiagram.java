@@ -3,6 +3,7 @@ package com.architecture_design.app.ui.diagram;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GridBagConstraints;
+import java.awt.GridLayout;
 import java.util.List;
 
 import javax.swing.BoxLayout;
@@ -52,14 +53,27 @@ public class MethodDiagram extends BaseDiagram<MethodObject> {
 
 			JPanel panel = new JPanel();
 			panel.setLayout(new BorderLayout(0, 0));
+			
+			JPanel numberPanel = new JPanel();
+			panel.add(numberPanel, BorderLayout.WEST);
+			numberPanel.setLayout(new GridLayout(0, 2));
+			
+			JPanel nodePanel = new JPanel();
+			nodePanel.setBorder(new LineBorder(Color.BLACK));
+			JLabel lblNode = new JLabel("m" + lineObject.getNodeNumber());
+			// Padding
+			if (lineObject.getNodeNumber() < 10)
+				lblNode.setBorder(new EmptyBorder(0, 0, 0, 5));
+			lblNode.setFont(font);
+			nodePanel.add(lblNode);
+			numberPanel.add(nodePanel);
 
 			JPanel linePanel = new JPanel();
 			linePanel.setBorder(new LineBorder(Color.BLACK));
 			JLabel lblLinePosition = new JLabel(String.valueOf(lineNumber));
 			lblLinePosition.setFont(font);
-			lblLinePosition.setBorder(new EmptyBorder(0, 2, 0, 2));
 			linePanel.add(lblLinePosition);
-			panel.add(linePanel, BorderLayout.WEST);
+			numberPanel.add(linePanel);
 
 			JLabel label = new JLabel(line);
 			label.setFont(font);

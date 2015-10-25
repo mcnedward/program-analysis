@@ -27,13 +27,15 @@ public abstract class BaseDiagram<T extends BaseObject> extends JScrollPane {
 	protected JLayeredPane mainPanel;
 	protected T typeObject;
 
+	private boolean useHeader = true;
+
 	protected int width, height;
 	protected Font font;
 
 	public BaseDiagram() {
 		font = new Font("Segoe UI", Font.PLAIN, 12);
 	}
-	
+
 	public BaseDiagram(ContentPanel parent, T typeObject, int fontSize) {
 		font = new Font("Segoe UI", Font.PLAIN, fontSize);
 		this.parent = parent;
@@ -45,6 +47,12 @@ public abstract class BaseDiagram<T extends BaseObject> extends JScrollPane {
 		this();
 		this.parent = parent;
 		this.typeObject = typeObject;
+		initialize();
+	}
+	
+	public BaseDiagram(ContentPanel parent, T typeObject, boolean useHeader) {
+		this(parent, typeObject);
+		this.useHeader = useHeader;
 		initialize();
 	}
 
@@ -59,7 +67,8 @@ public abstract class BaseDiagram<T extends BaseObject> extends JScrollPane {
 		setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
 
 		createMainPanel();
-		createHeaderPanel();
+		if (useHeader)
+			createHeaderPanel();
 	}
 
 	private void createMainPanel() {
@@ -86,7 +95,7 @@ public abstract class BaseDiagram<T extends BaseObject> extends JScrollPane {
 		constraints1.fill = GridBagConstraints.BOTH;
 		mainPanel.add(classNamePanel, constraints1);
 	}
-	
+
 	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);

@@ -24,6 +24,7 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
@@ -88,7 +89,7 @@ public class MainWindow extends JFrame {
 
 	private void findResources() {
 		// TODO Remove this hard-coded value
-		comboBox.addItem("C:\\Users\\Edward\\Dev\\Workspace");
+		// comboBox.addItem("C:\\Users\\Edward\\Dev\\Workspace");
 		File resourceDir = new File("resources");
 		for (File file : resourceDir.listFiles()) {
 			comboBox.addItem(file.getAbsolutePath());
@@ -103,7 +104,7 @@ public class MainWindow extends JFrame {
 			e.printStackTrace();
 			System.out.println("Something went wrong when trying to use the System Look and Feel...");
 		}
-		setBounds(100, 100, 1200, 650);
+		setBounds(100, 100, 1300, 900);
 		drawingPanel = new JPanel();
 		drawingPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(drawingPanel);
@@ -159,8 +160,14 @@ public class MainWindow extends JFrame {
 		int height = 700;
 		int x = getWidth() - width - 40;
 		int y = 50;
+
+		JScrollPane scrollPane_1 = new JScrollPane();
+		scrollPane_1.setBounds(200, 50, 1050, 750);
+		scrollPane_1.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		scrollPane_1.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+		drawingPanel.add(scrollPane_1);
 		mainPanel.setBounds(x, y, width, height);
-		drawingPanel.add(mainPanel);
+		scrollPane_1.setViewportView(mainPanel);
 
 		contentPanel = new ContentPanel(mainPanel);
 		mainPanel.add(contentPanel);
@@ -208,7 +215,7 @@ public class MainWindow extends JFrame {
 		lblMessage.setText("");
 		final JFileChooser fileChooser = new JFileChooser();
 		fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
-		
+
 		File file;
 		String currentFileLocation = comboBox.getSelectedItem().toString();
 		if (!"".equals(currentFileLocation))
@@ -216,7 +223,7 @@ public class MainWindow extends JFrame {
 		else
 			file = new File(System.getProperty("user.home"));
 		fileChooser.setCurrentDirectory(file);
-		
+
 		int result = fileChooser.showOpenDialog(MainWindow.this);
 		if (result == JFileChooser.APPROVE_OPTION) {
 			File selectedFile = fileChooser.getSelectedFile();
@@ -279,8 +286,8 @@ class FileListCellRenderer extends DefaultListCellRenderer {
 	public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
 		super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
 		if (value instanceof File) {
-			setText(((File)value).getName());
-			setToolTipText(((File)value).getAbsolutePath());
+			setText(((File) value).getName());
+			setToolTipText(((File) value).getAbsolutePath());
 		}
 		return this;
 	}

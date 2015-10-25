@@ -1,5 +1,7 @@
 package com.architecture_design.app.classobject.statement;
 
+import com.architecture_design.app.classobject.LineObject;
+
 /**
  * @author Edward McNealy <edwardmcn64@gmail.com> - Oct 24, 2015
  *
@@ -12,6 +14,25 @@ public class IfStatement extends BaseStatement {
 
 	public IfStatement() {
 		super();
+	}
+
+	public void updateNodeNumbers() {
+		for (LineObject thenLine : thenStatement.getLines()) {
+			for (LineObject line : lines) {
+				if (thenLine.getLineNumber() == line.getLineNumber()) {
+					thenLine.setNodeNumber(line.getNodeNumber());
+					break;
+				}
+			}
+		}
+		for (LineObject elseLine : elseStatement.getLines()) {
+			for (LineObject line : lines) {
+				if (elseLine.getLineNumber() == line.getLineNumber()) {
+					elseLine.setNodeNumber(line.getNodeNumber());
+					break;
+				}
+			}
+		}
 	}
 
 	/**
@@ -37,7 +58,8 @@ public class IfStatement extends BaseStatement {
 	}
 
 	/**
-	 * @param thenStatement the thenStatement to set
+	 * @param thenStatement
+	 *            the thenStatement to set
 	 */
 	public void setThenStatement(BaseStatement thenStatement) {
 		this.thenStatement = thenStatement;

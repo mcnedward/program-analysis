@@ -5,8 +5,10 @@ package com.architecture_design.app.classobject;
  *
  */
 public class LineObject {
+	
 	protected int lineNumber;
 	protected String line;
+	protected int nodeNumber;
 	
 	public LineObject() {
 		
@@ -17,6 +19,21 @@ public class LineObject {
 		this.lineNumber = lineNumber;
 	}
 	
+
+	/**
+	 * @return the lineNumber
+	 */
+	public int getLineNumber() {
+		return lineNumber;
+	}
+
+	/**
+	 * @param lineNumber the lineNumber to set
+	 */
+	public void setLineNumber(int lineNumber) {
+		this.lineNumber = lineNumber;
+	}
+
 	/**
 	 * @return the line
 	 */
@@ -32,17 +49,17 @@ public class LineObject {
 	}
 
 	/**
-	 * @return the lineNumber
+	 * @return the nodeNumber
 	 */
-	public int getLineNumber() {
-		return lineNumber;
+	public int getNodeNumber() {
+		return nodeNumber;
 	}
 
 	/**
-	 * @param lineNumber the lineNumber to set
+	 * @param nodeNumber the nodeNumber to set
 	 */
-	public void setLineNumber(int lineNumber) {
-		this.lineNumber = lineNumber;
+	public void setNodeNumber(int nodeNumber) {
+		this.nodeNumber = nodeNumber;
 	}
 
 	@Override

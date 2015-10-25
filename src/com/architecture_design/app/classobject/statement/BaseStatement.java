@@ -11,7 +11,7 @@ import com.architecture_design.app.classobject.LineObject;
  */
 public class BaseStatement implements IStatement {
 
-	private List<LineObject> lines;
+	protected List<LineObject> lines;
 	
 	public BaseStatement() {
 		lines = new ArrayList<LineObject>();

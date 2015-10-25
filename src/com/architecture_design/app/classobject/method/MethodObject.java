@@ -60,6 +60,10 @@ public class MethodObject extends BaseObject {
 			lineObjects.add(line);
 		}
 		Collections.sort(lineObjects, new LineObjectComparator());
+		int x = 1;
+		for (LineObject line : lineObjects) {
+			line.setNodeNumber(x++);
+		}
 		return lineObjects;
 	}
 
