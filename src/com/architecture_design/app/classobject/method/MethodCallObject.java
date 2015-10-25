@@ -1,4 +1,4 @@
-package com.architecture_design.app.classobject;
+package com.architecture_design.app.classobject.method;
 
 import java.util.List;
 

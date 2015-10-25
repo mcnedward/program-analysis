@@ -1,6 +1,7 @@
 package com.architecture_design.app.ui.diagram;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -27,15 +28,23 @@ public abstract class BaseDiagram<T extends BaseObject> extends JScrollPane {
 	protected T typeObject;
 
 	protected int width, height;
+	protected Font font;
 
 	public BaseDiagram() {
-
+		font = new Font("Segoe UI", Font.PLAIN, 12);
+	}
+	
+	public BaseDiagram(ContentPanel parent, T typeObject, int fontSize) {
+		font = new Font("Segoe UI", Font.PLAIN, fontSize);
+		this.parent = parent;
+		this.typeObject = typeObject;
+		initialize();
 	}
 
 	public BaseDiagram(ContentPanel parent, T typeObject) {
+		this();
 		this.parent = parent;
 		this.typeObject = typeObject;
-
 		initialize();
 	}
 
@@ -77,7 +86,7 @@ public abstract class BaseDiagram<T extends BaseObject> extends JScrollPane {
 		constraints1.fill = GridBagConstraints.BOTH;
 		mainPanel.add(classNamePanel, constraints1);
 	}
-
+	
 	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);

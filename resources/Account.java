@@ -108,21 +108,47 @@ public class Account extends BaseEntity implements Serializable {
 		id = accountId;
 		userRoles.add(role);
 	}
-	
+
 	void doThis(String thiss) {
-		
+
 	}
 
 	/**
 	 * Converts an account's saved recipes into RecipeResults that can be returned to the client.
 	 */
 	public static synchronized void convertRecipes() {
-		if (recipeResults == null)
+		if (recipeResults == null) {
 			recipeResults = new ArrayList<RecipeWrapper>();
+			int x = 0;
+		} else
+			recipeResults = recipeResults;
 		for (Recipe recipe : recipes) {
 			RecipeWrapper wrapper = Converter.convertRecipeToRecipeWrapper(recipe);
 			wrapper.savedToAccount = true;
 			recipeResults.add(wrapper);
+		}
+		for (int x = 0; x < recipes.size(); x++) {
+			boolean thisIsHit = true;
+			wrapper.setHit = thisIsHit;
+		}
+		int i = 4;
+		while (i < 10) {
+			doStuffHere();
+			i++;
+		}
+
+		int z = 5;
+		do {
+			doMoreStuff();
+			z++;
+		} while (z < 10);
+
+		switch (recipe) {
+		case recipe.toString().equals("Pizza"):
+			recipe = new Recipe();
+			break;
+		default:
+			break;
 		}
 	}
 

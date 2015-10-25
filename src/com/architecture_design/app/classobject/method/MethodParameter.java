@@ -1,4 +1,4 @@
-package com.architecture_design.app.classobject;
+package com.architecture_design.app.classobject.method;
 
 /**
  * @author Edward McNealy <edwardmcn64@gmail.com> - Oct 18, 2015

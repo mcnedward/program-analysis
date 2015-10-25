@@ -9,9 +9,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.architecture_design.app.classobject.ClassObject;
-import com.architecture_design.app.classobject.MethodObject;
-import com.architecture_design.app.classobject.MethodParameter;
 import com.architecture_design.app.classobject.VariableObject;
+import com.architecture_design.app.classobject.method.MethodObject;
+import com.architecture_design.app.classobject.method.MethodParameter;
 
 /**
  * @author Edward McNealy <edwardmcn64@gmail.com> - Oct 16, 2015
@@ -86,10 +86,6 @@ public class FileParser {
 					}
 				}
 			}
-		}
-		for (MethodObject method : classObject.getMethods()) {
-			List<String> methodLines = methodMap.get(method);
-			method.setMethodLines(methodLines);
 		}
 
 		return classObject;

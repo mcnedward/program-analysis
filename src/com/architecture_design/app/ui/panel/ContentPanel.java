@@ -11,7 +11,7 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
 import com.architecture_design.app.classobject.ClassObject;
-import com.architecture_design.app.classobject.MethodObject;
+import com.architecture_design.app.classobject.method.MethodObject;
 import com.architecture_design.app.ui.diagram.ClassDiagram;
 import com.architecture_design.app.ui.diagram.MethodDiagram;
 import com.architecture_design.app.ui.diagram.MetricsDiagram;
@@ -144,7 +144,7 @@ public class ContentPanel extends JPanel {
 		methodPanel = new JPanel();
 		setPanelBounds(methodPanel);
 		methodPanel.setLayout(null); // Set to AbsoluteLayout
-
+		
 		GridBagConstraints g = new GridBagConstraints();
 		g.gridheight = 1;
 		g.gridwidth = 1;

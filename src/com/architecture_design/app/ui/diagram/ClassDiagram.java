@@ -16,9 +16,9 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
 import com.architecture_design.app.classobject.ClassObject;
-import com.architecture_design.app.classobject.MethodObject;
-import com.architecture_design.app.classobject.MethodParameter;
 import com.architecture_design.app.classobject.VariableObject;
+import com.architecture_design.app.classobject.method.MethodObject;
+import com.architecture_design.app.classobject.method.MethodParameter;
 import com.architecture_design.app.ui.panel.ContentPanel;
 
 /**
@@ -56,6 +56,7 @@ public class ClassDiagram extends BaseDiagram<ClassObject> {
 		for (VariableObject variableObject : variables) {
 			String variable = "- " + variableObject.getName() + ": " + variableObject.getType();
 			JLabel label = new JLabel(variable);
+			label.setFont(font);
 			label.setHorizontalAlignment(SwingConstants.LEFT);
 			variablePanel.add(label);
 		}
@@ -94,6 +95,7 @@ public class ClassDiagram extends BaseDiagram<ClassObject> {
 			}
 			method += ")";
 			JLabel label = new JLabel(method);
+			label.setFont(font);
 			label.setHorizontalAlignment(SwingConstants.LEFT);
 			panel.setBorder(new EmptyBorder(2, 5, 2, 5));
 			panel.add(label);

@@ -12,8 +12,8 @@ import javax.swing.SwingConstants;
 import javax.swing.border.MatteBorder;
 
 import com.architecture_design.app.classobject.ClassObject;
-import com.architecture_design.app.classobject.MethodCallObject;
-import com.architecture_design.app.classobject.MethodObject;
+import com.architecture_design.app.classobject.method.MethodCallObject;
+import com.architecture_design.app.classobject.method.MethodObject;
 import com.architecture_design.app.ui.panel.ContentPanel;
 
 /**

@@ -12,7 +12,8 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
-import com.architecture_design.app.classobject.MethodObject;
+import com.architecture_design.app.classobject.LineObject;
+import com.architecture_design.app.classobject.method.MethodObject;
 import com.architecture_design.app.ui.panel.ContentPanel;
 
 /**
@@ -27,13 +28,13 @@ public class MethodDiagram extends BaseDiagram<MethodObject> {
 	}
 
 	public MethodDiagram(ContentPanel parent, MethodObject methodObject) {
-		super(parent, methodObject);
+		super(parent, methodObject, 10);
 
 		createMethodLines();
 	}
 
 	private void createMethodLines() {
-		List<String> methodLines = typeObject.getMethodLines();
+		List<LineObject> methodLines = typeObject.getLineObjects();
 		if (methodLines.isEmpty())
 			return;
 		JPanel methodLinePanel = new JPanel();
@@ -45,19 +46,23 @@ public class MethodDiagram extends BaseDiagram<MethodObject> {
 		constraints.gridy = 2;
 		constraints.fill = GridBagConstraints.BOTH;
 
-		for (int x = 0; x < methodLines.size(); x++) {
-			String line = methodLines.get(x);
+		for (LineObject lineObject : methodLines) {
+			String line = lineObject.getLine();
+			int lineNumber = lineObject.getLineNumber();
+
 			JPanel panel = new JPanel();
 			panel.setLayout(new BorderLayout(0, 0));
 
 			JPanel linePanel = new JPanel();
 			linePanel.setBorder(new LineBorder(Color.BLACK));
-			JLabel lblLinePosition = new JLabel(String.valueOf(x + 1));
-			lblLinePosition.setBorder(new EmptyBorder(0, 3, 0, 3));
+			JLabel lblLinePosition = new JLabel(String.valueOf(lineNumber));
+			lblLinePosition.setFont(font);
+			lblLinePosition.setBorder(new EmptyBorder(0, 2, 0, 2));
 			linePanel.add(lblLinePosition);
 			panel.add(linePanel, BorderLayout.WEST);
 
 			JLabel label = new JLabel(line);
+			label.setFont(font);
 			label.setBorder(new EmptyBorder(0, 5, 0, 5));
 			label.setHorizontalAlignment(SwingConstants.LEFT);
 			panel.add(label, BorderLayout.CENTER);
@@ -68,9 +73,7 @@ public class MethodDiagram extends BaseDiagram<MethodObject> {
 
 	@Override
 	protected void setDimension() {
-		height = (typeObject.getMethodLines().size() * 40) + 30;
-		if (height > parent.getDiagramPanel().getHeight())
-			height = parent.getDiagramPanel().getHeight();
+		height = parent.getDiagramPanel().getHeight();
 		width = 450;
 	}
 

@@ -1,12 +1,12 @@
 package com.architecture_design.app.visitor;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-import com.architecture_design.app.classobject.MethodCallObject;
-import com.architecture_design.app.classobject.MethodObject;
-import com.architecture_design.app.classobject.MethodParameter;
+import com.architecture_design.app.classobject.LineObject;
+import com.architecture_design.app.classobject.method.MethodCallObject;
+import com.architecture_design.app.classobject.method.MethodObject;
+import com.architecture_design.app.classobject.method.MethodParameter;
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.ImportDeclaration;
 import com.github.javaparser.ast.Node;
@@ -22,7 +22,12 @@ import com.github.javaparser.ast.expr.MethodCallExpr;
 import com.github.javaparser.ast.expr.NameExpr;
 import com.github.javaparser.ast.expr.ThisExpr;
 import com.github.javaparser.ast.stmt.BlockStmt;
+import com.github.javaparser.ast.stmt.DoStmt;
+import com.github.javaparser.ast.stmt.ForStmt;
 import com.github.javaparser.ast.stmt.ForeachStmt;
+import com.github.javaparser.ast.stmt.IfStmt;
+import com.github.javaparser.ast.stmt.SwitchStmt;
+import com.github.javaparser.ast.stmt.WhileStmt;
 
 /**
  * @author Edward McNealy <edwardmcn64@gmail.com> - Oct 23, 2015
@@ -32,14 +37,19 @@ public class MethodVisitor extends BaseVisitor<MethodObject> {
 
 	private List<MethodObject> methodObjects;
 
+	private StatementVisitor statementVisitor;
+
 	public MethodVisitor() {
 		super();
 		methodObjects = new ArrayList<MethodObject>();
+
+		statementVisitor = new StatementVisitor();
 	}
 
 	@Override
 	public void reset() {
 		methodObjects = new ArrayList<MethodObject>();
+		statementVisitor.reset();
 	}
 
 	@Override
@@ -71,8 +81,26 @@ public class MethodVisitor extends BaseVisitor<MethodObject> {
 
 	@Override
 	public void visit(BlockStmt b, MethodObject arg) {
-		String[] lines = b.toString().split("[\\r\\n\\t]\\s?");
-		arg.setMethodLines(Arrays.asList(lines));
+		List<Node> childrenNodes = b.getChildrenNodes();
+		if (!childrenNodes.isEmpty()) {
+			for (Node node : childrenNodes) {
+				if (node instanceof ForeachStmt)
+					statementVisitor.visit((ForeachStmt) node, arg);
+				else if (node instanceof ForStmt)
+					statementVisitor.visit((ForStmt) node, arg);
+				else if (node instanceof IfStmt)
+					statementVisitor.visit((IfStmt) node, arg);
+				else if (node instanceof WhileStmt)
+					statementVisitor.visit((WhileStmt) node, arg);
+				else if (node instanceof DoStmt)
+					statementVisitor.visit((DoStmt) node, arg);
+				else if (node instanceof SwitchStmt)
+					statementVisitor.visit((SwitchStmt) node, arg);
+				else {
+					arg.addLine(new LineObject(node.toString(), node.getBeginLine()));
+				}
+			}
+		}
 		findChildrenMethodCallExpr(b.getChildrenNodes(), arg);
 	}
 
@@ -181,7 +209,9 @@ public class MethodVisitor extends BaseVisitor<MethodObject> {
 
 	/**
 	 * Find the scope of the method call. This is the variable or class that calls the method.
-	 * @param m The MethodCallExpr
+	 * 
+	 * @param m
+	 *            The MethodCallExpr
 	 * @return The name of the variable or class that calls the method.
 	 */
 	private String getMethodCallExprScope(MethodCallExpr m) {
@@ -216,7 +246,9 @@ public class MethodVisitor extends BaseVisitor<MethodObject> {
 
 	/**
 	 * Find the parent class node for a node.
-	 * @param n The node to search through.
+	 * 
+	 * @param n
+	 *            The node to search through.
 	 * @return The ClassOrInterfaceDeclaration of the node.
 	 */
 	private ClassOrInterfaceDeclaration getClassDeclaration(Node n) {
