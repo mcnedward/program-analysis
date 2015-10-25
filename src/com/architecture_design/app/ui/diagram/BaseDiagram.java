@@ -2,7 +2,6 @@ package com.architecture_design.app.ui.diagram;
 
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 
@@ -25,9 +24,9 @@ public abstract class BaseDiagram<T extends BaseObject> extends JScrollPane {
 
 	protected ContentPanel parent;
 	protected JLayeredPane mainPanel;
-	protected T typeObject;
+	protected JLabel lblHeader;
 
-	private boolean useHeader = true;
+	protected T typeObject;
 
 	protected int width, height;
 	protected Font font;
@@ -49,12 +48,6 @@ public abstract class BaseDiagram<T extends BaseObject> extends JScrollPane {
 		this.typeObject = typeObject;
 		initialize();
 	}
-	
-	public BaseDiagram(ContentPanel parent, T typeObject, boolean useHeader) {
-		this(parent, typeObject);
-		this.useHeader = useHeader;
-		initialize();
-	}
 
 	protected abstract void setDimension();
 
@@ -67,8 +60,7 @@ public abstract class BaseDiagram<T extends BaseObject> extends JScrollPane {
 		setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
 
 		createMainPanel();
-		if (useHeader)
-			createHeaderPanel();
+		createHeaderPanel();
 	}
 
 	private void createMainPanel() {
@@ -84,20 +76,22 @@ public abstract class BaseDiagram<T extends BaseObject> extends JScrollPane {
 	}
 
 	private void createHeaderPanel() {
-		JPanel classNamePanel = new JPanel();
-		classNamePanel.setBorder(new LineBorder(Color.BLACK));
-		JLabel lblClassName = new JLabel(typeObject.getName());
-		classNamePanel.add(lblClassName);
+		JPanel headerPanel = new JPanel();
+		headerPanel.setBorder(new LineBorder(Color.BLACK));
+
+		lblHeader = new JLabel(typeObject.getName());
+		headerPanel.add(lblHeader);
+
 		GridBagConstraints constraints1 = new GridBagConstraints();
 		constraints1.gridwidth = 1;
 		constraints1.gridx = 0;
 		constraints1.gridy = 0;
 		constraints1.fill = GridBagConstraints.BOTH;
-		mainPanel.add(classNamePanel, constraints1);
-	}
 
-	@Override
-	public void paintComponent(Graphics g) {
-		super.paintComponent(g);
+		mainPanel.add(headerPanel, constraints1);
+	}
+	
+	protected void updateHeaderPanel(String text) {
+		lblHeader.setText(text);
 	}
 }

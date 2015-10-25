@@ -41,6 +41,7 @@ public class MethodDiagram extends BaseDiagram<MethodObject> {
 		JPanel methodLinePanel = new JPanel();
 		methodLinePanel.setLayout(new BoxLayout(methodLinePanel, BoxLayout.Y_AXIS));
 		methodLinePanel.setBorder(new LineBorder(Color.BLACK));
+		
 		GridBagConstraints constraints = new GridBagConstraints();
 		constraints.gridwidth = 1;
 		constraints.gridx = 0;

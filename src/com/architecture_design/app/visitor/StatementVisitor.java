@@ -6,7 +6,7 @@ import com.architecture_design.app.classobject.method.MethodObject;
 import com.architecture_design.app.classobject.statement.BaseStatement;
 import com.architecture_design.app.classobject.statement.DoStatement;
 import com.architecture_design.app.classobject.statement.ForStatement;
-import com.architecture_design.app.classobject.statement.ForeachStatement;
+import com.architecture_design.app.classobject.statement.ForEachStatement;
 import com.architecture_design.app.classobject.statement.IfStatement;
 import com.architecture_design.app.classobject.statement.SwitchStatement;
 import com.architecture_design.app.classobject.statement.WhileStatement;
@@ -34,7 +34,7 @@ public class StatementVisitor extends BaseVisitor<MethodObject> {
 
 	@Override
 	public void visit(ForeachStmt f, MethodObject arg) {
-		ForeachStatement statement = new ForeachStatement();
+		ForEachStatement statement = new ForEachStatement();
 		statement.setVariableType(f.getVariable().getType().toString());
 		statement.setVariableValue(f.getVariable().getVars().get(0).toString());
 		addLines(statement, f.toString(), f.getBeginLine());

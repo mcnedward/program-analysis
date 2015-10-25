@@ -8,7 +8,7 @@ import com.architecture_design.app.classobject.LineObject;
 import com.architecture_design.app.classobject.method.MethodObject;
 import com.architecture_design.app.classobject.statement.BaseStatement;
 import com.architecture_design.app.classobject.statement.ForStatement;
-import com.architecture_design.app.classobject.statement.ForeachStatement;
+import com.architecture_design.app.classobject.statement.ForEachStatement;
 import com.architecture_design.app.classobject.statement.IfStatement;
 
 /**
@@ -71,7 +71,7 @@ public class Main {
 	}
 	
 	private static void handleStatementBranching(BaseStatement statement) {
-		if (statement instanceof ForeachStatement) {
+		if (statement instanceof ForEachStatement) {
 //			System.out.println("For Each Statement starting...");
 		}
 		else if (statement instanceof ForStatement) {

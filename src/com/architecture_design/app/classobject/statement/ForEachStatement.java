@@ -4,12 +4,12 @@ package com.architecture_design.app.classobject.statement;
  * @author Edward McNealy <edwardmcn64@gmail.com> - Oct 24, 2015
  *
  */
-public class ForeachStatement extends BaseStatement {
+public class ForEachStatement extends BaseStatement {
 
 	private String variableType;
 	private String variableValue;
 	
-	public ForeachStatement() {
+	public ForEachStatement() {
 		super();
 	}
 
