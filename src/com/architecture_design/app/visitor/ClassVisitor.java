@@ -1,6 +1,9 @@
 package com.architecture_design.app.visitor;
 
+import java.util.List;
+
 import com.architecture_design.app.classobject.ClassObject;
+import com.architecture_design.app.classobject.method.MethodObject;
 import com.github.javaparser.ast.body.BodyDeclaration;
 import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
 import com.github.javaparser.ast.body.FieldDeclaration;
@@ -53,7 +56,12 @@ public class ClassVisitor extends BaseVisitor<ClassObject> {
 		}
 
 		classObject.setVariables(variableVisitor.getVariableObjects());
-		classObject.setMethods(methodVisitor.getMethodObjects());
+		
+		List<MethodObject> methods = methodVisitor.getMethodObjects();
+		for (MethodObject method : methods) {
+			method.updateLines();
+		}
+		classObject.setMethods(methods);
 	}
 
 	/**

@@ -120,8 +120,18 @@ public class Account extends BaseEntity implements Serializable {
 		if (recipeResults == null) {
 			recipeResults = new ArrayList<RecipeWrapper>();
 			int x = 0;
-		} else
+			if (true) {
+				methodHere();
+				String assignment = "HERE";
+			} else if (!true) {
+				otherMethod();
+			} else {
+				lastMethod();
+			}
+		} else {
 			recipeResults = recipeResults;
+			more();
+		}
 		for (Recipe recipe : recipes) {
 			RecipeWrapper wrapper = Converter.convertRecipeToRecipeWrapper(recipe);
 			wrapper.savedToAccount = true;

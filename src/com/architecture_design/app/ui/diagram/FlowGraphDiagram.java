@@ -7,13 +7,12 @@ import java.awt.GridLayout;
 import java.util.List;
 
 import javax.swing.BoxLayout;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
-import javax.swing.border.LineBorder;
 
 import com.architecture_design.app.classobject.LineObject;
+import com.architecture_design.app.classobject.LineType;
 import com.architecture_design.app.classobject.method.MethodObject;
 import com.architecture_design.app.classobject.statement.BaseStatement;
 import com.architecture_design.app.classobject.statement.DoStatement;
@@ -23,6 +22,7 @@ import com.architecture_design.app.classobject.statement.IfStatement;
 import com.architecture_design.app.classobject.statement.SwitchStatement;
 import com.architecture_design.app.classobject.statement.WhileStatement;
 import com.architecture_design.app.ui.panel.ContentPanel;
+import com.architecture_design.app.ui.panel.NodePanel;
 
 /**
  * @author Edward McNealy <edwardmcn64@gmail.com> - Oct 25, 2015
@@ -56,35 +56,39 @@ public class FlowGraphDiagram extends BaseDiagram<MethodObject> {
 	}
 
 	private void create() {
-		List<LineObject> lineObjects = typeObject.getLineObjects();
-		List<BaseStatement> statements = typeObject.getStatements();
+		JPanel container = new JPanel();
+		container.setLayout(new BorderLayout(0, 0));
+		container.setBorder(new EmptyBorder(5, 0, 5, 0));
+		
+		createIfStatement(typeObject.getLines(), 0, container);
+		
+		flowGraphPanel.add(container);
 
-		if (!lineObjects.isEmpty()) {
-			int startingLine = lineObjects.get(0).getLineNumber();
-			int endingLine = lineObjects.get(lineObjects.size() - 1).getLineNumber();
-			for (int currentLine = startingLine; currentLine <= endingLine; currentLine++) {
-				// Check if the current line is part of a statement
-				if (!statements.isEmpty()) {
-					for (BaseStatement statement : statements) {
-						List<LineObject> statementLines = statement.getLines();
-						if (!statementLines.isEmpty()) {
-							LineObject firstLineInStatement = statementLines.get(0);
-							if (firstLineInStatement.getLineNumber() == currentLine) {
-								buildNodes(statement);
-								currentLine = statementLines.get(statementLines.size() - 1).getLineNumber() + 1;
-								continue;
-							}
-						}
-					}
-				}
-				// If nothing found in statements, then find line in single line objects
-				for (LineObject line : lineObjects) {
-					if (line.getLineNumber() == currentLine) {
-						createNode(flowGraphPanel, line, Color.BLACK);
-					}
-				}
-			}
-		}
+		// if (!lineObjects.isEmpty()) {
+		// int startingLine = lineObjects.get(0).getLineNumber();
+		// int endingLine = lineObjects.get(lineObjects.size() - 1).getLineNumber();
+		// for (int currentLine = startingLine; currentLine <= endingLine; currentLine++) {
+		// // Check if the current line is part of a statement
+		// if (!statements.isEmpty()) {
+		// for (BaseStatement statement : statements) {
+		// List<LineObject> statementLines = statement.getLines();
+		// if (!statementLines.isEmpty()) {
+		// LineObject firstLineInStatement = statementLines.get(0);
+		// if (firstLineInStatement.getLineNumber() == currentLine) {
+		// buildNodes(statement);
+		// continue;
+		// }
+		// }
+		// }
+		// }
+		// // If nothing found in statements, then find line in single line objects
+		// for (LineObject line : lineObjects) {
+		// if (line.getLineNumber() == currentLine) {
+		// createNode(flowGraphPanel, line, Color.BLACK);
+		// }
+		// }
+		// }
+		// }
 	}
 
 	private void buildNodes(BaseStatement statement) {
@@ -107,17 +111,37 @@ public class FlowGraphDiagram extends BaseDiagram<MethodObject> {
 	}
 
 	private void createGenericStatement(BaseStatement statement, JPanel container, Color color) {
-		JPanel whilePanel = new JPanel();
-		whilePanel.setLayout(new BoxLayout(whilePanel, BoxLayout.Y_AXIS));
+		JPanel parent = new JPanel();
+		parent.setLayout(new BoxLayout(parent, BoxLayout.Y_AXIS));
 
 		for (LineObject line : statement.getLines()) {
-			createNode(whilePanel, line, color);
+			createNode(parent, line, color);
 		}
 
-		container.add(whilePanel, SwingConstants.CENTER);
+		container.add(parent, SwingConstants.CENTER);
 	}
 
 	private void createIfPanel(IfStatement statement, JPanel container) {
+		// statement.updateNodeNumbers();
+		// BaseStatement thenStatement = statement.getThenStatement();
+		// BaseStatement elseStatement = statement.getElseStatement();
+		//
+		// // Add if condition
+		// NodePanel panel = new NodePanel("m" + statement.getLines().get(0).getNodeNumber(), Color.GREEN);
+		// conditionPanel.add(panel);
+		//
+		// for (LineObject line : thenStatement.getLines()) {
+		// createNode(thenPanel, line, Color.GREEN);
+		// }
+		// for (LineObject line : elseStatement.getLines()) {
+		// createNode(elsePanel, line, Color.GREEN);
+		// }
+		//
+		// container.add(ifPanel, SwingConstants.CENTER);
+	}
+
+	// Need the index of the lines list?
+	private void createIfStatement(List<LineObject> lines, int index, JPanel container) {
 		JPanel ifPanel = new JPanel();
 		ifPanel.setLayout(new BorderLayout(0, 0));
 		JPanel conditionPanel = new JPanel();
@@ -133,36 +157,30 @@ public class FlowGraphDiagram extends BaseDiagram<MethodObject> {
 		ifPanel.add(conditionPanel, BorderLayout.NORTH);
 		ifPanel.add(statementPanel, BorderLayout.CENTER);
 
-		statement.updateNodeNumbers();
-		BaseStatement thenStatement = statement.getThenStatement();
-		BaseStatement elseStatement = statement.getElseStatement();
-
-		// Add if condition
-		JPanel condPanel = new JPanel();
-		condPanel.setBorder(new LineBorder(Color.GREEN));
-		JLabel lblCondition = new JLabel("m" + statement.getLines().get(0).getNodeNumber());
-		condPanel.add(lblCondition);
-		conditionPanel.add(condPanel);
-
-		for (LineObject line : thenStatement.getLines()) {
-			createNode(thenPanel, line, Color.GREEN);
+		for (; index < lines.size(); index++) {
+			LineObject line = lines.get(index++);
+			if (line.getLineType() == null)
+				createNode(thenPanel, line, Color.GREEN);
+			else if (line.getLineType().equals(LineType.IF)) {
+				createNode(conditionPanel, line, Color.GREEN);
+				JPanel ifContainer = new JPanel();
+				ifContainer.setLayout(new BorderLayout(0, 0));
+				ifContainer.setBorder(new EmptyBorder(5, 0, 5, 0));
+				createIfStatement(lines, index, ifContainer);
+			} else if (line.getLineType().equals(LineType.ELSE))
+				createNode(elsePanel, line, Color.GREEN);
 		}
-		for (LineObject line : elseStatement.getLines()) {
-			createNode(elsePanel, line, Color.GREEN);
-		}
-
-		container.add(ifPanel, SwingConstants.CENTER);
+		
+		container.add(ifPanel);
 	}
 
 	private void createNode(JPanel parent, LineObject line, Color color) {
 		JPanel container = new JPanel();
-		parent.setBorder(new EmptyBorder(2, 0, 2, 0));
-		JPanel panel = new JPanel();
-		container.add(panel);
-		panel.setBorder(new LineBorder(color));
 
-		JLabel label = new JLabel("m" + String.valueOf(line.getNodeNumber()));
-		panel.add(label);
+		String nodeText = "m" + String.valueOf(line.getNodeNumber());
+		NodePanel panel = new NodePanel(nodeText, color);
+
+		container.add(panel);
 		parent.add(container);
 	}
 
