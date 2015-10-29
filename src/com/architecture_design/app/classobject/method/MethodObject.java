@@ -1,16 +1,11 @@
 package com.architecture_design.app.classobject.method;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
+import java.util.regex.Pattern;
 
 import com.architecture_design.app.classobject.BaseObject;
 import com.architecture_design.app.classobject.LineObject;
-import com.architecture_design.app.classobject.LineType;
 import com.architecture_design.app.classobject.statement.BaseStatement;
 
 /**
@@ -20,21 +15,19 @@ import com.architecture_design.app.classobject.statement.BaseStatement;
 public class MethodObject extends BaseObject {
 
 	private String returnType;
+	private List<LineObject> methodLines;
 	private List<MethodParameter> methodParameters;
 
 	// Lines and Statements
-	private List<LineObject> lines;
-	private List<BaseStatement> statements;
+	private BaseStatement statement;
 
 	private List<MethodCallObject> methodCallObjects;
 
 	public MethodObject() {
 		super("Method");
+		methodLines = new ArrayList<LineObject>();
 		methodParameters = new ArrayList<MethodParameter>();
 		methodCallObjects = new ArrayList<MethodCallObject>();
-
-		lines = new ArrayList<LineObject>();
-		statements = new ArrayList<BaseStatement>();
 	}
 
 	public void addParameter(MethodParameter methodParameter) {
@@ -45,90 +38,105 @@ public class MethodObject extends BaseObject {
 		methodCallObjects.add(methodCallObject);
 	}
 
-	public void addLines(List<LineObject> linesList) {
-		lines.addAll(linesList);
+	public BaseStatement getStatementAtLineNumber(int lineNumber) {
+		return statement.getStatementAtLineNumber(statement, lineNumber);
 	}
 
-	public void addLine(LineObject line) {
-		lines.add(line);
+	public List<BaseStatement> getStatements() {
+		return statement.getStatements();
 	}
 
-	public void addStatement(BaseStatement statement) {
-		statements.add(statement);
+	/**
+	 * Reset this method so all nodes can be recreated.
+	 */
+	public void reset() {
+		// Probably could be a much better way to do this part...
+		for (LineObject line : methodLines) {
+			setNodeCreated(line.getLineNumber(), false);
+		}
+	}
+	
+	public void update() {
+		statement.update();
+		updateNodeNumbers(methodLines);
 	}
 
-	public void updateLines() {
-		// Convert to Set to remove duplicates
-		Set<LineObject> lineObjectSet = new HashSet<LineObject>(lines);
-
-		// Find all the lines that have a LineType
-		List<LineObject> linesWithType = new ArrayList<LineObject>();
-		for (LineObject line : lineObjectSet) {
-			if (line.getLineType() != null) {
-				linesWithType.add(line);
-				lines.remove(line);
+	/**
+	 * Determines if this is the top level of an if statement.
+	 * 
+	 * Finds the line at the beginning of this statement, then checks to determine if the line contains else. If it
+	 * does, then this statement is an else-if.
+	 * 
+	 * @param statement
+	 *            The statement to check.
+	 * @return True if it is the top level if statement, false otherwise.
+	 */
+	public boolean isParentElse(BaseStatement statement) {
+		for (LineObject line : methodLines) {
+			if (line.getLineNumber() == statement.getBeginLine()) {
+				return Pattern.compile("\\s*\\}?\\s*\\belse\\b\\s*\\{?").matcher(line.getLine()).find();
 			}
 		}
-		// If there are lines that are both if and if-else, remove the if
-		for (int x = 0; x < linesWithType.size(); x++) {
-			LineObject o1 = linesWithType.get(x);
-			for (int y = 0; y < linesWithType.size(); y++) {
-				LineObject o2 = linesWithType.get(y);
-				boolean case1 = o1.getLineType().equals(LineType.IF) && o2.getLineType().equals(LineType.ELSE_IF);
-				boolean case2 = o2.getLineType().equals(LineType.IF) && o1.getLineType().equals(LineType.ELSE_IF);
-				if (o1.getLineNumber() == o2.getLineNumber() && (case1 || case2)) {
-					if (o1.getLineType().equals(LineType.IF)) {
-						linesWithType.remove(x);
-						break;
-					} else if (o2.getLineType().equals(LineType.IF)) {
-						linesWithType.remove(y);
-						break;
-					}
-				}
-			}
-		}
-
-		// Remove lines that don't contain a LineType but should
-		Iterator<LineObject> iterator = lineObjectSet.iterator();
-		while (iterator.hasNext()) {
-			LineObject line = iterator.next();
-			for (LineObject lineWithType : linesWithType) {
-				if (lineWithType.getLineNumber() == line.getLineNumber()) {
-					iterator.remove();
-					break;
-				}
-			}
-		}
-		// Convert back
-		lineObjectSet.addAll(linesWithType);
-		lines = new ArrayList<LineObject>(lineObjectSet);
-		Collections.sort(lines, new LineObjectComparator());
-		updateNodeNumbers();
+		return false;
 	}
 
-	private void updateNodeNumbers() {
+	private void updateNodeNumbers(List<LineObject> lines) {
 		int nodeNumber = 1;
 		for (LineObject line : lines) {
 			line.setNodeNumber(nodeNumber++);
 		}
 	}
 
-	public List<LineObject> getLineObjects() {
-		List<LineObject> lineObjects = new ArrayList<LineObject>();
+	public boolean isNodeCreatedAtLine(int lineNumber) {
+		for (LineObject line : methodLines) {
+			if (line.getLineNumber() == lineNumber)
+				if (line.isNodeCreated()) {
+					return true;
+				}
+		}
+		return checkStatementsForNode(statement.getStatements(), lineNumber);
+	}
+
+	private boolean checkStatementsForNode(List<BaseStatement> statements, int lineNumber) {
 		if (!statements.isEmpty()) {
 			for (BaseStatement statement : statements) {
-				lineObjects.addAll(statement.getLines());
+				for (LineObject line : statement.getLines()) {
+					if (line.getLineNumber() == lineNumber) {
+						if (line.isNodeCreated()) {
+							return true;
+						}
+					}
+				}
+				return checkStatementsForNode(statement.getStatements(), lineNumber);
 			}
 		}
-		for (LineObject line : lines) {
-			lineObjects.add(line);
+		return false;
+	}
+
+	public void setNodeCreated(int lineNumber, boolean isCreated) {
+		for (LineObject line : methodLines) {
+			if (line.getLineNumber() == lineNumber) {
+				line.setNodeCreated(isCreated);
+			}
 		}
-		Collections.sort(lineObjects, new LineObjectComparator());
-		int x = 1;
-		for (LineObject line : lineObjects) {
-			line.setNodeNumber(x++);
+		setStatementNodesCreated(statement.getStatements(), lineNumber, isCreated);
+	}
+
+	private void setStatementNodesCreated(List<BaseStatement> statements, int lineNumber, boolean isCreated) {
+		if (!statements.isEmpty()) {
+			for (BaseStatement statement : statements) {
+				for (LineObject line : statement.getLines()) {
+					if (line.getLineNumber() == lineNumber) {
+						line.setNodeCreated(isCreated);
+					}
+				}
+				setStatementNodesCreated(statement.getStatements(), lineNumber, isCreated);
+			}
 		}
-		return lineObjects;
+	}
+
+	public void addMethodLine(LineObject line) {
+		methodLines.add(line);
 	}
 
 	/**
@@ -147,6 +155,13 @@ public class MethodObject extends BaseObject {
 	}
 
 	/**
+	 * @return the methodLines
+	 */
+	public List<LineObject> getMethodLines() {
+		return methodLines;
+	}
+
+	/**
 	 * @return the methodParameters
 	 */
 	public List<MethodParameter> getMethodParameters() {
@@ -162,33 +177,18 @@ public class MethodObject extends BaseObject {
 	}
 
 	/**
-	 * @return the lines
+	 * @return the statement
 	 */
-	public List<LineObject> getLines() {
-		return lines;
+	public BaseStatement getStatement() {
+		return statement;
 	}
 
 	/**
-	 * @param lines
-	 *            the lines to set
+	 * @param statement
+	 *            the statement to set
 	 */
-	public void setLines(List<LineObject> lines) {
-		this.lines = lines;
-	}
-
-	/**
-	 * @return the statements
-	 */
-	public List<BaseStatement> getStatements() {
-		return statements;
-	}
-
-	/**
-	 * @param statements
-	 *            the statements to set
-	 */
-	public void setStatements(List<BaseStatement> statements) {
-		this.statements = statements;
+	public void setStatement(BaseStatement statement) {
+		this.statement = statement;
 	}
 
 	/**
@@ -204,15 +204,6 @@ public class MethodObject extends BaseObject {
 	 */
 	public void setMethodCallObjects(List<MethodCallObject> methodCallObjects) {
 		this.methodCallObjects = methodCallObjects;
-	}
-
-}
-
-class LineObjectComparator implements Comparator<LineObject> {
-
-	@Override
-	public int compare(LineObject o1, LineObject o2) {
-		return o1.getLineNumber() - o2.getLineNumber();
 	}
 
 }

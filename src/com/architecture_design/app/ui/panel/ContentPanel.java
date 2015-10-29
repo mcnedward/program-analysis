@@ -14,6 +14,7 @@ import com.architecture_design.app.classobject.ClassObject;
 import com.architecture_design.app.classobject.method.MethodObject;
 import com.architecture_design.app.ui.diagram.ClassDiagram;
 import com.architecture_design.app.ui.diagram.FlowGraphDiagram;
+import com.architecture_design.app.ui.diagram.FlowGraphFrame;
 import com.architecture_design.app.ui.diagram.MethodDiagram;
 import com.architecture_design.app.ui.diagram.MetricsDiagram;
 
@@ -113,13 +114,19 @@ public class ContentPanel extends JPanel {
 		if (flowGraphDiagram != null) {
 			flowGraphPanel.remove(flowGraphDiagram);
 		}
+		
+		methodObject.reset();
+		
 		methodDiagram = new MethodDiagram(this, methodObject);
 		methodPanel.add(methodDiagram);
 		removePanelHeader(methodPanel);
 
 		flowGraphDiagram = new FlowGraphDiagram(this, methodObject);
 		flowGraphPanel.add(flowGraphDiagram);
-
+		
+		FlowGraphFrame frame = new FlowGraphFrame(methodObject);
+		frame.setVisible(true);
+		
 		revalidate();
 		repaint();
 		System.out.println("Loading method diagram for: " + methodObject.getName());

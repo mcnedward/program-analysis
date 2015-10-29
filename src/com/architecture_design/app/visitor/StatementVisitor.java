@@ -1,15 +1,14 @@
 package com.architecture_design.app.visitor;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.architecture_design.app.classobject.LineObject;
 import com.architecture_design.app.classobject.LineType;
-import com.architecture_design.app.classobject.method.MethodObject;
 import com.architecture_design.app.classobject.statement.BaseStatement;
 import com.architecture_design.app.classobject.statement.DoStatement;
 import com.architecture_design.app.classobject.statement.ForEachStatement;
 import com.architecture_design.app.classobject.statement.ForStatement;
+import com.architecture_design.app.classobject.statement.IfStatement;
 import com.architecture_design.app.classobject.statement.SwitchStatement;
 import com.architecture_design.app.classobject.statement.WhileStatement;
 import com.github.javaparser.ast.Node;
@@ -28,55 +27,61 @@ import com.github.javaparser.ast.stmt.WhileStmt;
  * @author Edward McNealy <edwardmcn64@gmail.com> - Oct 24, 2015
  *
  */
-public class StatementVisitor extends BaseVisitor<MethodObject> {
+public class StatementVisitor extends BaseVisitor<BaseStatement> {
 
 	public StatementVisitor() {
-
 	}
 
 	@Override
 	public void reset() {
-
 	}
 
 	@Override
-	public void visit(ForeachStmt f, MethodObject arg) {
+	public void visit(ForeachStmt f, BaseStatement arg) {
 		ForEachStatement statement = new ForEachStatement();
 		statement.setVariableType(f.getVariable().getType().toString());
 		statement.setVariableValue(f.getVariable().getVars().get(0).toString());
-		addLines(statement, f.toString(), f.getBeginLine());
+		List<LineObject> lineObjects = convertToLineObjects(f);
+		statement.setLines(lineObjects);
 		arg.addStatement(statement);
 	}
 
 	@Override
-	public void visit(ForStmt f, MethodObject arg) {
+	public void visit(ForStmt f, BaseStatement arg) {
 		ForStatement statement = new ForStatement();
 		statement.setInit(f.getInit().get(0).toString());
 		statement.setCompare(f.getCompare().toString());
 		statement.setUpdate(f.getUpdate().get(0).toString());
-		addLines(statement, f.toString(), f.getBeginLine());
+		List<LineObject> lineObjects = convertToLineObjects(f);
+		statement.setLines(lineObjects);
 		arg.addStatement(statement);
 	}
 
 	@Override
-	public void visit(IfStmt i, MethodObject arg) {
-		List<LineObject> lineObjects = new ArrayList<LineObject>();
+	public void visit(IfStmt i, BaseStatement arg) {
 		List<Node> childrenNodes = i.getChildrenNodes();
-
-		// Convert statement to lines
-		int lineNumber = i.getBeginLine();
-		for (String line : i.toString().split("[\\r\\n\\t]\\s?")) {
-			lineObjects.add(new LineObject(line, lineNumber++));
+		
+		IfStatement statement = new IfStatement();
+		statement.setBeginLine(i.getBeginLine());
+		statement.setEndLine(i.getEndLine());
+		statement.setThenBeginLine(i.getThenStmt().getBeginLine());
+		statement.setThenEndLine(i.getThenStmt().getEndLine());
+		if (i.getElseStmt() != null) {
+			statement.setElseBeginLine(i.getElseStmt().getBeginLine());
+			statement.setElseEndLine(i.getElseStmt().getEndLine());
 		}
 
-		checkNodesForStatement(this, childrenNodes, arg);
+		List<LineObject> lineObjects = convertToLineObjects(i);
 
 		// First line of the IfStmt is the condition statement
 		LineObject conditionLine = findLineByNumber(lineObjects, i.getBeginLine());
 		conditionLine.setLineType(LineType.IF);
+		statement.setCondition(conditionLine);
 
+		checkNodesForStatement(this, childrenNodes, statement);
+		
 		Statement elseStatement = i.getElseStmt();
-		// Else statements in a block have the "else" line included in the statement, so the "else line can be found
+		// Else statements in a block have the "else" line included in the statement, so the "else" line can be found
 		// right away. Non-block else statements do not include the "else", so find the line directly above
 		if (elseStatement != null) {
 			LineObject elseLine = null;
@@ -93,7 +98,9 @@ public class StatementVisitor extends BaseVisitor<MethodObject> {
 				elseLine.setLineType(LineType.ELSE);
 			}
 		}
-		arg.addLines(lineObjects);
+		
+		statement.setLines(lineObjects);
+		arg.addStatement(statement);
 	}
 
 	private LineObject findLineByNumber(List<LineObject> lines, int lineNumber) {
@@ -105,23 +112,25 @@ public class StatementVisitor extends BaseVisitor<MethodObject> {
 	}
 
 	@Override
-	public void visit(WhileStmt w, MethodObject arg) {
+	public void visit(WhileStmt w, BaseStatement arg) {
 		WhileStatement statement = new WhileStatement();
 		statement.setCondition(w.getCondition().toString());
-		addLines(statement, w.toString(), w.getBeginLine());
+		List<LineObject> lineObjects = convertToLineObjects(w);
+		statement.setLines(lineObjects);
 		arg.addStatement(statement);
 	}
 
 	@Override
-	public void visit(DoStmt d, MethodObject arg) {
+	public void visit(DoStmt d, BaseStatement arg) {
 		DoStatement statement = new DoStatement();
 		statement.setCondition(d.getCondition().toString());
-		addLines(statement, d.toString(), d.getBeginLine());
+		List<LineObject> lineObjects = convertToLineObjects(d);
+		statement.setLines(lineObjects);
 		arg.addStatement(statement);
 	}
 
 	@Override
-	public void visit(SwitchStmt s, MethodObject arg) {
+	public void visit(SwitchStmt s, BaseStatement arg) {
 		SwitchStatement statement = new SwitchStatement();
 		statement.setSelector(s.getSelector().toString());
 		List<SwitchEntryStmt> entries = s.getEntries();
@@ -136,14 +145,8 @@ public class StatementVisitor extends BaseVisitor<MethodObject> {
 				label = labelExpression.toString();
 			statement.addSwitchEntry(label, entry.getBeginLine(), isDefault);
 		}
-		addLines(statement, s.toString(), s.getBeginLine());
+		List<LineObject> lineObjects = convertToLineObjects(s);
+		statement.setLines(lineObjects);
 		arg.addStatement(statement);
 	}
-
-	private void addLines(BaseStatement statement, String lines, int lineNumber) {
-		for (String line : lines.split("[\\r\\n\\t]\\s?")) {
-			statement.addLine(line, lineNumber++);
-		}
-	}
-
 }

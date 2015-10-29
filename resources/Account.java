@@ -109,10 +109,6 @@ public class Account extends BaseEntity implements Serializable {
 		userRoles.add(role);
 	}
 
-	void doThis(String thiss) {
-
-	}
-
 	/**
 	 * Converts an account's saved recipes into RecipeResults that can be returned to the client.
 	 */
@@ -160,6 +156,10 @@ public class Account extends BaseEntity implements Serializable {
 		default:
 			break;
 		}
+	}
+
+	void doThis(String thiss) {
+
 	}
 
 	public void addRecipe(Recipe recipe) {

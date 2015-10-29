@@ -8,37 +8,20 @@ import com.architecture_design.app.classobject.LineObject;
  */
 public class IfStatement extends BaseStatement {
 
-	private String condition;
-	private BaseStatement thenStatement;
-	private BaseStatement elseStatement;
+	private LineObject condition;
+	private int thenBeginLine;
+	private int thenEndLine;
+	private int elseBeginLine;
+	private int elseEndLine;
 
 	public IfStatement() {
 		super();
 	}
 
-	public void updateNodeNumbers() {
-		for (LineObject thenLine : thenStatement.getLines()) {
-			for (LineObject line : lines) {
-				if (thenLine.getLineNumber() == line.getLineNumber()) {
-					thenLine.setNodeNumber(line.getNodeNumber());
-					break;
-				}
-			}
-		}
-		for (LineObject elseLine : elseStatement.getLines()) {
-			for (LineObject line : lines) {
-				if (elseLine.getLineNumber() == line.getLineNumber()) {
-					elseLine.setNodeNumber(line.getNodeNumber());
-					break;
-				}
-			}
-		}
-	}
-
 	/**
 	 * @return the condition
 	 */
-	public String getCondition() {
+	public LineObject getCondition() {
 		return condition;
 	}
 
@@ -46,37 +29,68 @@ public class IfStatement extends BaseStatement {
 	 * @param condition
 	 *            the condition to set
 	 */
-	public void setCondition(String condition) {
+	public void setCondition(LineObject condition) {
 		this.condition = condition;
 	}
-
+	
 	/**
-	 * @return the thenStatement
+	 * @return the thenBeginLine
 	 */
-	public BaseStatement getThenStatement() {
-		return thenStatement;
+	public int getThenBeginLine() {
+		return thenBeginLine;
 	}
 
 	/**
-	 * @param thenStatement
-	 *            the thenStatement to set
+	 * @param thenBeginLine the thenBeginLine to set
 	 */
-	public void setThenStatement(BaseStatement thenStatement) {
-		this.thenStatement = thenStatement;
+	public void setThenBeginLine(int thenBeginLine) {
+		this.thenBeginLine = thenBeginLine;
 	}
 
 	/**
-	 * @return the elseStatement
+	 * @return the thenEndLine
 	 */
-	public BaseStatement getElseStatement() {
-		return elseStatement;
+	public int getThenEndLine() {
+		return thenEndLine;
 	}
 
 	/**
-	 * @param elseStatement
-	 *            the elseStatement to set
+	 * @param thenEndLine the thenEndLine to set
 	 */
-	public void setElseStatement(BaseStatement elseStatement) {
-		this.elseStatement = elseStatement;
+	public void setThenEndLine(int thenEndLine) {
+		this.thenEndLine = thenEndLine;
+	}
+
+	/**
+	 * @return the elseBeginLine
+	 */
+	public int getElseBeginLine() {
+		return elseBeginLine;
+	}
+
+	/**
+	 * @param elseBeginLine the elseBeginLine to set
+	 */
+	public void setElseBeginLine(int elseBeginLine) {
+		this.elseBeginLine = elseBeginLine;
+	}
+
+	/**
+	 * @return the elseEndLine
+	 */
+	public int getElseEndLine() {
+		return elseEndLine;
+	}
+
+	/**
+	 * @param elseEndLine the elseEndLine to set
+	 */
+	public void setElseEndLine(int elseEndLine) {
+		this.elseEndLine = elseEndLine;
+	}
+
+	@Override
+	public String toString() {
+		return "IfStatement[" +beginLine + "-" +endLine + "] " + condition;
 	}
 }

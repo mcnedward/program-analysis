@@ -41,8 +41,11 @@ import com.architecture_design.app.ui.panel.ContentPanel;
 public class MainWindow extends JFrame {
 	private static final long serialVersionUID = 1L;
 
+	public static int WIDTH = 1300;
+	public static int HEIGHT = 800;
+	
 	// Panels
-	private JPanel drawingPanel;
+	private JPanel topLevelPanel;
 	private JPanel filePanel;
 	private JPanel mainPanel;
 	private ContentPanel contentPanel;
@@ -104,20 +107,20 @@ public class MainWindow extends JFrame {
 			e.printStackTrace();
 			System.out.println("Something went wrong when trying to use the System Look and Feel...");
 		}
-		setBounds(100, 100, 1300, 900);
-		drawingPanel = new JPanel();
-		drawingPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
-		setContentPane(drawingPanel);
+		setBounds(100, 100, WIDTH, HEIGHT);
+		topLevelPanel = new JPanel();
+		topLevelPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
+		setContentPane(topLevelPanel);
 
 		initializeComponents();
 	}
 
 	private void initializeComponents() {
-		drawingPanel.setLayout(null);
+		topLevelPanel.setLayout(null);
 
 		filePanel = new JPanel();
 		filePanel.setBounds(5, 5, 700, 30);
-		drawingPanel.add(filePanel);
+		topLevelPanel.add(filePanel);
 		filePanel.setLayout(new GridLayout(2, 1, 0, 0));
 		filePanel.setLayout(new BorderLayout(10, 0));
 
@@ -163,9 +166,9 @@ public class MainWindow extends JFrame {
 
 		JScrollPane scrollPane_1 = new JScrollPane();
 		scrollPane_1.setBounds(200, 50, 1050, 750);
-		scrollPane_1.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-		scrollPane_1.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
-		drawingPanel.add(scrollPane_1);
+		scrollPane_1.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+		scrollPane_1.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		topLevelPanel.add(scrollPane_1);
 		mainPanel.setBounds(x, y, width, height);
 		scrollPane_1.setViewportView(mainPanel);
 
@@ -176,7 +179,7 @@ public class MainWindow extends JFrame {
 
 		JPanel filesPanel = new JPanel();
 		filesPanel.setBounds(5, 51, 180, 425);
-		drawingPanel.add(filesPanel);
+		topLevelPanel.add(filesPanel);
 		filesPanel.setLayout(new BorderLayout(0, 0));
 
 		lblFiles = new JLabel("Files");
@@ -202,7 +205,7 @@ public class MainWindow extends JFrame {
 
 		messagePanel = new JPanel();
 		messagePanel.setBounds(720, 5, 440, 30);
-		drawingPanel.add(messagePanel);
+		topLevelPanel.add(messagePanel);
 		messagePanel.setLayout(new BorderLayout(0, 0));
 
 		lblMessage = new JLabel("Load a java file or project.");

@@ -35,7 +35,7 @@ public class MethodDiagram extends BaseDiagram<MethodObject> {
 	}
 
 	private void createMethodLines() {
-		List<LineObject> methodLines = typeObject.getLineObjects();
+		List<LineObject> methodLines = typeObject.getMethodLines();
 		if (methodLines.isEmpty())
 			return;
 		JPanel methodLinePanel = new JPanel();

@@ -1,5 +1,8 @@
 package com.architecture_design.app.classobject;
 
+import com.architecture_design.app.classobject.statement.BaseStatement;
+import com.architecture_design.app.classobject.statement.IfStatement;
+
 /**
  * @author Edward McNealy <edwardmcn64@gmail.com> - Oct 24, 2015
  *
@@ -10,14 +13,23 @@ public class LineObject {
 	protected int lineNumber;
 	protected String line;
 	protected int nodeNumber;
-
-	public LineObject() {
-
-	}
+	protected boolean nodeCreated;
 
 	public LineObject(String line, int lineNumber) {
 		this.line = line;
 		this.lineNumber = lineNumber;
+		nodeCreated = false;
+	}
+
+	public boolean isStatement() {
+		// If the line type is not null and not an else statement, then it needs to be handle in a special way
+		return lineType != null && !lineType.equals(LineType.ELSE);
+	}
+
+	public void setLineType(BaseStatement statement) {
+		if (statement instanceof IfStatement)
+			if (lineType == null)
+				lineType = LineType.IF;
 	}
 
 	/**
@@ -78,6 +90,21 @@ public class LineObject {
 	 */
 	public void setNodeNumber(int nodeNumber) {
 		this.nodeNumber = nodeNumber;
+	}
+
+	/**
+	 * @return the nodeCreated
+	 */
+	public boolean isNodeCreated() {
+		return nodeCreated;
+	}
+
+	/**
+	 * @param nodeCreated
+	 *            the nodeCreated to set
+	 */
+	public void setNodeCreated(boolean nodeCreated) {
+		this.nodeCreated = nodeCreated;
 	}
 
 	@Override

@@ -59,7 +59,7 @@ public class ClassVisitor extends BaseVisitor<ClassObject> {
 		
 		List<MethodObject> methods = methodVisitor.getMethodObjects();
 		for (MethodObject method : methods) {
-			method.updateLines();
+			method.update();
 		}
 		classObject.setMethods(methods);
 	}

@@ -3,9 +3,11 @@ package com.architecture_design.app.visitor;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.architecture_design.app.classobject.LineObject;
 import com.architecture_design.app.classobject.method.MethodCallObject;
 import com.architecture_design.app.classobject.method.MethodObject;
 import com.architecture_design.app.classobject.method.MethodParameter;
+import com.architecture_design.app.classobject.statement.BaseStatement;
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.ImportDeclaration;
 import com.github.javaparser.ast.Node;
@@ -72,10 +74,26 @@ public class MethodVisitor extends BaseVisitor<MethodObject> {
 	@Override
 	public void visit(BlockStmt b, MethodObject arg) {
 		List<Node> childrenNodes = b.getChildrenNodes();
+		
+		BaseStatement statement = new BaseStatement();
+		List<LineObject> lineObjects = convertToLineObjects(b);
+		statement.setLines(lineObjects);
+		// For the method body, remove the first and last line, which are the curly brackets
+		lineObjects.remove(0);
+		lineObjects.remove(lineObjects.size() - 1);
+		for (LineObject line : lineObjects) {
+			arg.addMethodLine(line);
+		}
+		
+		statement.setBeginLine(b.getBeginLine() + 1);
+		statement.setEndLine(b.getEndLine() - 1);
+		
 		if (!childrenNodes.isEmpty()) {
-			checkNodesForStatement(statementVisitor, childrenNodes, arg);
+			checkNodesForStatement(statementVisitor, childrenNodes, statement);
 		}
 		findChildrenMethodCallExpr(b.getChildrenNodes(), arg);
+		
+		arg.setStatement(statement);
 	}
 
 	private void findChildrenMethodCallExpr(List<Node> nodes, MethodObject arg) {

@@ -7,9 +7,6 @@ import com.architecture_design.app.classobject.ClassObject;
 import com.architecture_design.app.classobject.LineObject;
 import com.architecture_design.app.classobject.method.MethodObject;
 import com.architecture_design.app.classobject.statement.BaseStatement;
-import com.architecture_design.app.classobject.statement.ForStatement;
-import com.architecture_design.app.classobject.statement.ForEachStatement;
-import com.architecture_design.app.classobject.statement.IfStatement;
 
 /**
  * @author Edward McNealy <edwardmcn64@gmail.com> - Oct 16, 2015
@@ -34,16 +31,17 @@ public class Main {
 		MethodObject method = classObject.getMethods().get(1);
 		System.out.println(method);
 
-		List<LineObject> lineObjects = method.getLineObjects();
-		List<BaseStatement> statements = method.getStatements();
+		List<BaseStatement> statements = method.getStatement().getStatements();
 
-		int startingLine = lineObjects.get(0).getLineNumber();
-		int endingLine = lineObjects.get(lineObjects.size() - 1).getLineNumber();
+		// getMethodLines()
+		int startingLine = 0;
+		int endingLine = 0;
 		int mNumber = 1;
 		for (int currentLine = startingLine; currentLine < endingLine; currentLine++) {
 			// Check if the current line is part of a statement
 			boolean breakOut = false, valueFound = false;;
 			for (BaseStatement statement : statements) {
+				printLines(statement);
 				if (breakOut)
 					continue;
 				LineObject firstLineInStatement = statement.getLines().get(0);
@@ -61,7 +59,7 @@ public class Main {
 			}
 			// If nothing found in statements, then find line in single line objects
 			if (!valueFound) {
-				for (LineObject line : lineObjects) {
+				for (LineObject line : method.getMethodLines()) {
 					if (line.getLineNumber() == currentLine) {
 						System.out.println("m" + mNumber + " [" + currentLine + "]: " + line.getLine());
 					}
@@ -71,20 +69,6 @@ public class Main {
 	}
 	
 	private static void handleStatementBranching(BaseStatement statement) {
-		if (statement instanceof ForEachStatement) {
-//			System.out.println("For Each Statement starting...");
-		}
-		else if (statement instanceof ForStatement) {
-			
-		} else if (statement instanceof IfStatement) {
-			IfStatement ifStatement = (IfStatement) statement;
-			System.out.println("Branching off for If Statement");
-			System.out.print("IF... ");
-			System.out.println(ifStatement.getCondition());
-			printLines(ifStatement.getThenStatement());
-			System.out.println("ELSE...");
-			printLines(ifStatement.getElseStatement());
-		}
 	}
 	
 	private static void printLines(BaseStatement statement) {
