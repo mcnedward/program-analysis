@@ -11,12 +11,14 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
 import com.architecture_design.app.classobject.ClassObject;
+import com.architecture_design.app.classobject.VariableObject;
 import com.architecture_design.app.classobject.method.MethodObject;
+import com.architecture_design.app.ui.MainWindow;
 import com.architecture_design.app.ui.diagram.ClassDiagram;
 import com.architecture_design.app.ui.diagram.FlowGraphDiagram;
-import com.architecture_design.app.ui.diagram.FlowGraphFrame;
 import com.architecture_design.app.ui.diagram.MethodDiagram;
 import com.architecture_design.app.ui.diagram.MetricsDiagram;
+import com.architecture_design.app.ui.diagram.VariableAccessDiagram;
 
 /**
  * @author Edward McNealy <edwardmcn64@gmail.com> - Oct 20, 2015
@@ -30,6 +32,7 @@ public class ContentPanel extends JPanel {
 	private JPanel methodPanel;
 	private JPanel metricsPanel;
 	private JPanel flowGraphPanel;
+	private JPanel variablePanel;
 
 	private JPanel wmcPanel;
 	private JPanel ditPanel;
@@ -38,7 +41,9 @@ public class ContentPanel extends JPanel {
 	private MethodDiagram methodDiagram;
 	private MetricsDiagram metricsDiagram;
 	private FlowGraphDiagram flowGraphDiagram;
+	private VariableAccessDiagram variableAccessDiagram;
 
+	private ClassObject classObject;
 	private List<ClassObject> classObjects;
 
 	public ContentPanel(JPanel parent) {
@@ -59,7 +64,8 @@ public class ContentPanel extends JPanel {
 
 		addDiagramPanel();
 		addMethodPanel();
-		addMetricsPanel();
+		// addMetricsPanel();
+		addVariableAccessPanel();
 		addFlowGraphPanel();
 	}
 
@@ -82,6 +88,7 @@ public class ContentPanel extends JPanel {
 	}
 
 	private void loadClassObject(ClassObject classObject) {
+		this.classObject = classObject;
 		if (classDiagram != null) {
 			System.out.println("Removing class diagram for: " + classObject.getName());
 			diagramPanel.removeAll();
@@ -99,7 +106,7 @@ public class ContentPanel extends JPanel {
 		updatePanelHeader(methodPanel, "Select a method to view the definition.");
 
 		metricsDiagram = new MetricsDiagram(this, classObject);
-		metricsPanel.add(metricsDiagram);
+		MainWindow.metricsPanel.add(metricsDiagram);
 
 		revalidate();
 		repaint();
@@ -114,22 +121,33 @@ public class ContentPanel extends JPanel {
 		if (flowGraphDiagram != null) {
 			flowGraphPanel.remove(flowGraphDiagram);
 		}
-		
+
 		methodObject.reset();
-		
+
 		methodDiagram = new MethodDiagram(this, methodObject);
 		methodPanel.add(methodDiagram);
 		removePanelHeader(methodPanel);
 
-		flowGraphDiagram = new FlowGraphDiagram(this, methodObject);
+		flowGraphDiagram = new FlowGraphDiagram(flowGraphPanel, methodObject);
 		flowGraphPanel.add(flowGraphDiagram);
-		
-		FlowGraphFrame frame = new FlowGraphFrame(methodObject);
-		frame.setVisible(true);
-		
+
 		revalidate();
 		repaint();
 		System.out.println("Loading method diagram for: " + methodObject.getName());
+	}
+
+	public void showVariableAccess(VariableObject variableObject) {
+		if (variableAccessDiagram != null) {
+			System.out.println("Removing method diagram for: " + variableObject.getName());
+			variablePanel.remove(variableAccessDiagram);
+		}
+		
+		variableAccessDiagram = new VariableAccessDiagram(this, variableObject, classObject);
+		variablePanel.add(variableAccessDiagram);
+		
+		revalidate();
+		repaint();
+		System.out.println("Loading variable access diagram for: " + variableObject.getName());
 	}
 
 	private void removePanelHeader(JPanel parent) {
@@ -175,6 +193,22 @@ public class ContentPanel extends JPanel {
 		addPanelHeader(methodPanel, "");
 	}
 
+	private void addVariableAccessPanel() {
+		variablePanel = new JPanel();
+		setPanelBounds(variablePanel);
+		variablePanel.setLayout(null);
+
+		GridBagConstraints g = new GridBagConstraints();
+		g.gridheight = 1;
+		g.gridwidth = 1;
+		g.gridx = 0;
+		g.gridy = 1;
+		g.fill = GridBagConstraints.BOTH;
+
+		add(variablePanel, g);
+	}
+
+	// TODO Maybe update this to display in MainWindow
 	private void addMetricsPanel() {
 		metricsPanel = new JPanel();
 		setPanelBounds(metricsPanel);

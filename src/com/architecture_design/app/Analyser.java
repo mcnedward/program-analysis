@@ -68,7 +68,7 @@ public class Analyser {
 	 * @throws IOException
 	 */
 	private void loadFile(File selectedFile) throws IOException {
-		System.out.println("Loading: " + selectedFile.getName());
+		System.out.println("Loading: " + selectedFile.getAbsolutePath());
 
 		if (selectedFile.isDirectory())
 			handleDirectory(selectedFile.listFiles());

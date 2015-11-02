@@ -42,13 +42,14 @@ public class MainWindow extends JFrame {
 	private static final long serialVersionUID = 1L;
 
 	public static int WIDTH = 1300;
-	public static int HEIGHT = 800;
+	public static int HEIGHT = 875;
 	
 	// Panels
 	private JPanel topLevelPanel;
 	private JPanel filePanel;
 	private JPanel mainPanel;
 	private ContentPanel contentPanel;
+	public static JPanel metricsPanel;
 	// Buttons
 	private JButton btnBrowse;
 	private JButton btnLoad;
@@ -88,6 +89,7 @@ public class MainWindow extends JFrame {
 		findResources();
 
 		analyser = new Analyser();
+		loadAction();
 	}
 
 	private void findResources() {
@@ -212,6 +214,10 @@ public class MainWindow extends JFrame {
 		lblMessage.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		lblMessage.setHorizontalAlignment(SwingConstants.LEFT);
 		messagePanel.add(lblMessage);
+		
+		metricsPanel = new JPanel();
+		metricsPanel.setBounds(5, 492, 180, 310);
+		topLevelPanel.add(metricsPanel);
 	}
 
 	private void browseAction() {

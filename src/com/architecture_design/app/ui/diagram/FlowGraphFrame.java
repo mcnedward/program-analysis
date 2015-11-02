@@ -2,12 +2,12 @@ package com.architecture_design.app.ui.diagram;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.GridBagConstraints;
 
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.EmptyBorder;
@@ -15,6 +15,7 @@ import javax.swing.border.LineBorder;
 
 import com.architecture_design.app.classobject.method.MethodObject;
 import com.architecture_design.app.ui.MainWindow;
+import com.architecture_design.app.ui.builder.StatementBuilder;
 
 /**
  * @author Edward McNealy <edwardmcn64@gmail.com> - Oct 29, 2015
@@ -23,17 +24,13 @@ import com.architecture_design.app.ui.MainWindow;
 public class FlowGraphFrame extends JFrame {
 	private static final long serialVersionUID = 1L;
 
-	private MethodObject methodObject;
-
 	private JPanel mainPanel;
 	private JPanel flowGraphPanel;
 	protected JLabel lblHeader;
 
-	private IfBuilder ifBuilder;
+	private StatementBuilder statementBuilder;
 
 	public FlowGraphFrame(MethodObject methodObject) {
-		this.methodObject = methodObject;
-		
 		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -41,16 +38,14 @@ public class FlowGraphFrame extends JFrame {
 			e.printStackTrace();
 			System.out.println("Something went wrong when trying to use the System Look and Feel...");
 		}
-		setBounds(100, 100, MainWindow.WIDTH / 2, MainWindow.HEIGHT);
-		
+		setBounds(100, 100, (MainWindow.WIDTH / 2) + 60, MainWindow.HEIGHT);
+
 		mainPanel = new JPanel();
 		mainPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(mainPanel);
+
 		createHeaderPanel();
-		updateHeaderPanel("If-Green | For&ForEach-Blue | While-Yellow | Switch-Red");
-		
-		ifBuilder = new IfBuilder(methodObject);
-		
+		statementBuilder = new StatementBuilder(methodObject);
 		createFlowGraphDiagram();
 	}
 
@@ -59,40 +54,34 @@ public class FlowGraphFrame extends JFrame {
 		JPanel headerPanel = new JPanel();
 		headerPanel.setBorder(new LineBorder(Color.BLACK));
 
-		lblHeader = new JLabel(methodObject.getName());
-		headerPanel.add(lblHeader);
-
-		GridBagConstraints constraints1 = new GridBagConstraints();
-		constraints1.gridwidth = 1;
-		constraints1.gridx = 0;
-		constraints1.gridy = 0;
-		constraints1.fill = GridBagConstraints.BOTH;
+		JLabel lblIf = new JLabel("IF");
+		lblIf.setForeground(Color.GREEN);
+		headerPanel.add(lblIf);
+		JLabel lblFor = new JLabel("FOR");
+		lblFor.setForeground(Color.BLUE);
+		headerPanel.add(lblFor);
+		JLabel lblWhile = new JLabel("WHILE");
+		lblWhile.setForeground(Color.CYAN);
+		headerPanel.add(lblWhile);
+		JLabel lblSwitch = new JLabel("SWITCH");
+		lblSwitch.setForeground(Color.RED);
+		headerPanel.add(lblSwitch);
 
 		mainPanel.add(headerPanel, BorderLayout.NORTH);
 	}
 
-	protected void updateHeaderPanel(String text) {
-		lblHeader.setText(text);
-	}
-
 	private void createFlowGraphDiagram() {
+		JScrollPane flowGraphScrollPane = new JScrollPane();
+		flowGraphScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+		flowGraphScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+
 		flowGraphPanel = new JPanel();
 		flowGraphPanel.setLayout(new BoxLayout(flowGraphPanel, BoxLayout.Y_AXIS));
+		flowGraphPanel.setBorder(new LineBorder(Color.BLUE));
 
-		GridBagConstraints constraints = new GridBagConstraints();
-		constraints.gridwidth = 1;
-		constraints.gridx = 0;
-		constraints.gridy = 1;
-		constraints.fill = GridBagConstraints.BOTH;
+		statementBuilder.build(flowGraphPanel);
 
-		JPanel container = new JPanel();
-		container.setLayout(new BorderLayout(0, 0));
-		container.setBorder(new EmptyBorder(5, 0, 5, 0));
-
-		ifBuilder.build(container);
-		
-		flowGraphPanel.add(container);
-
-		mainPanel.add(flowGraphPanel);
+		flowGraphScrollPane.setViewportView(flowGraphPanel);
+		mainPanel.add(flowGraphScrollPane);
 	}
 }

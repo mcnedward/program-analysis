@@ -54,11 +54,18 @@ public class ClassDiagram extends BaseDiagram<ClassObject> {
 		constraints2.fill = GridBagConstraints.BOTH;
 
 		for (VariableObject variableObject : variables) {
+			JPanel panel = new JPanel();
+			panel.setLayout(new BorderLayout());
+
 			String variable = "- " + variableObject.getName() + ": " + variableObject.getType();
 			JLabel label = new JLabel(variable);
 			label.setFont(font);
 			label.setHorizontalAlignment(SwingConstants.LEFT);
-			variablePanel.add(label);
+
+			panel.add(label);
+			addVariableListener(panel);
+			label.putClientProperty("variableObject", variableObject);
+			variablePanel.add(panel);
 		}
 		mainPanel.add(variablePanel, constraints2);
 	}
@@ -104,6 +111,39 @@ public class ClassDiagram extends BaseDiagram<ClassObject> {
 			methodPanel.add(panel);
 		}
 		mainPanel.add(methodPanel, constraints);
+	}
+
+	private void addVariableListener(JPanel panel) {
+		JLabel label = (JLabel) panel.getComponents()[0];
+		panel.addMouseListener(new MouseListener() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+
+			}
+
+			@Override
+			public void mousePressed(MouseEvent e) {
+
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				label.setForeground(Color.BLACK);
+				label.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				label.setForeground(Color.BLUE);
+				label.setCursor(new Cursor(Cursor.HAND_CURSOR));
+			}
+
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				VariableObject variable = (VariableObject) label.getClientProperty("variableObject");
+				parent.showVariableAccess(variable);
+			}
+		});
 	}
 
 	private void addMethodListener(JPanel panel) {

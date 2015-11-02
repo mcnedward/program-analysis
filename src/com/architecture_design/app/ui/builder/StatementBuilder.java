@@ -1,4 +1,4 @@
-package com.architecture_design.app.ui.diagram;
+package com.architecture_design.app.ui.builder;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -12,7 +12,12 @@ import com.architecture_design.app.classobject.LineObject;
 import com.architecture_design.app.classobject.LineType;
 import com.architecture_design.app.classobject.method.MethodObject;
 import com.architecture_design.app.classobject.statement.BaseStatement;
+import com.architecture_design.app.classobject.statement.DoStatement;
+import com.architecture_design.app.classobject.statement.ForEachStatement;
+import com.architecture_design.app.classobject.statement.ForStatement;
 import com.architecture_design.app.classobject.statement.IfStatement;
+import com.architecture_design.app.classobject.statement.SwitchStatement;
+import com.architecture_design.app.classobject.statement.WhileStatement;
 import com.architecture_design.app.ui.panel.NodePanel;
 import com.architecture_design.app.ui.panel.ifpanel.IfPanel;
 
@@ -20,27 +25,50 @@ import com.architecture_design.app.ui.panel.ifpanel.IfPanel;
  * @author Edward McNealy <edwardmcn64@gmail.com> - Oct 29, 2015
  *
  */
-public class IfBuilder {
+public class StatementBuilder {
 
 	private MethodObject methodObject;
 	private boolean smallIcons;
-	
-	public IfBuilder(MethodObject methodObject, boolean smallIcons) {
+
+	public StatementBuilder(MethodObject methodObject, boolean smallIcons) {
 		this.methodObject = methodObject;
 		this.smallIcons = smallIcons;
 	}
-	
-	public IfBuilder(MethodObject methodObject) {
+
+	public StatementBuilder(MethodObject methodObject) {
 		this(methodObject, false);
 	}
-	
-	public void build(JPanel container) {
+
+	public void build(JPanel parent) {
 		BaseStatement methodStatement = methodObject.getStatement();
-		IfStatement ifStatement = (IfStatement) methodStatement.getStatements().get(methodStatement.getStatements().size() - 1);
-		IfPanel ifPanel = new IfPanel(methodObject, ifStatement);
-		fillIfPanel(ifStatement, ifPanel);
-		container.add(ifPanel);
-		
+
+		for (LineObject line : methodStatement.getLines()) {
+			if (!methodObject.isNodeCreatedAtLine(line.getLineNumber())) {
+				BaseStatement statement = methodObject.getStatementAtLineNumber(line.getLineNumber());
+				if (statement != null) {
+					if (statement instanceof IfStatement) {
+						IfStatement ifStatement = (IfStatement) statement;
+						IfPanel ifPanel = new IfPanel(parent.getHeight(), createNode(ifStatement.getCondition(), Color.GREEN));
+						methodObject.setNodeCreated(((IfStatement) statement).getCondition().getLineNumber(), true);
+						fillIfPanel(ifStatement, ifPanel);
+						parent.add(ifPanel);
+					}
+					if (statement instanceof ForStatement || statement instanceof ForEachStatement) {
+						createStatementNode(statement, parent, Color.BLUE);
+					}
+					if (statement instanceof WhileStatement || statement instanceof DoStatement) {
+						createStatementNode(statement, parent, Color.CYAN);
+					}
+					if (statement instanceof SwitchStatement) {
+						createStatementNode(statement, parent, Color.RED);
+					}
+				} else {
+					parent.add(createNode(line, Color.BLACK));
+					methodObject.setNodeCreated(line.getLineNumber(), true);
+				}
+			}
+		}
+
 		// Reset for reuse!
 		methodObject.reset();
 	}
@@ -73,7 +101,8 @@ public class IfBuilder {
 					if (statement instanceof IfStatement) {
 						if (line.getLineType().equals(LineType.ELSE_IF)) {
 							// New ElseIf Panel
-							IfPanel newIfPanel = new IfPanel(methodObject, (IfStatement) statement);
+							IfPanel newIfPanel = new IfPanel(ifPanel.getHeight(), createNode(((IfStatement) statement).getCondition(), Color.GREEN));
+							methodObject.setNodeCreated(((IfStatement) statement).getCondition().getLineNumber(), true);
 							fillIfPanel((IfStatement) statement, newIfPanel);
 							ifPanel.addToElseIfPanel(newIfPanel);
 							isElse = true;
@@ -84,7 +113,8 @@ public class IfBuilder {
 							branchPanel.setBorder(new LineBorder(Color.BLUE));
 						} else {
 							// New If Panel
-							IfPanel newIfPanel = new IfPanel(methodObject, (IfStatement) statement);
+							IfPanel newIfPanel = new IfPanel(ifPanel.getHeight(), createNode(((IfStatement) statement).getCondition(), Color.GREEN));
+							methodObject.setNodeCreated(((IfStatement) statement).getCondition().getLineNumber(), true);
 							fillIfPanel((IfStatement) statement, newIfPanel);
 							ifPanel.addToThenPanel(newIfPanel);
 						}
@@ -95,14 +125,19 @@ public class IfBuilder {
 		return null;
 	}
 
+	private void createStatementNode(BaseStatement statement, JPanel container, Color color) {
+		for (LineObject line : statement.getLines()) {
+			container.add(createNode(line, color));
+			methodObject.setNodeCreated(line.getLineNumber(), true);
+		}
+	}
+
 	private JPanel createNode(LineObject line, Color color) {
 		JPanel container = new JPanel();
-
 		String nodeText = "m" + String.valueOf(line.getNodeNumber());
 		NodePanel panel = new NodePanel(nodeText, color, smallIcons);
-
 		container.add(panel);
 		return container;
 	}
-
+	
 }

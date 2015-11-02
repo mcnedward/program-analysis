@@ -1,14 +1,17 @@
 package com.architecture_design.app.visitor;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import com.architecture_design.app.classobject.LineObject;
 import com.architecture_design.app.classobject.statement.BaseStatement;
+import com.architecture_design.app.comparator.LineObjectComparator;
 import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.body.ModifierSet;
 import com.github.javaparser.ast.stmt.BlockStmt;
 import com.github.javaparser.ast.stmt.DoStmt;
+import com.github.javaparser.ast.stmt.ExpressionStmt;
 import com.github.javaparser.ast.stmt.ForStmt;
 import com.github.javaparser.ast.stmt.ForeachStmt;
 import com.github.javaparser.ast.stmt.IfStmt;
@@ -46,6 +49,71 @@ public abstract class BaseVisitor<T> extends VoidVisitorAdapter<T> {
 		List<LineObject> lines = new ArrayList<LineObject>();
 		int lineNumber = s.getBeginLine();
 		for (String line : s.toString().split("[\\r\\n\\t]\\s?")) {
+			lines.add(new LineObject(line, lineNumber++));
+		}
+		return lines;
+	}
+
+	protected List<LineObject> convertToLineObjects2(Statement s) {
+		List<LineObject> lines = new ArrayList<LineObject>();
+		handleNodes(lines, s.getChildrenNodes());
+		Collections.sort(lines, new LineObjectComparator());
+		int currentLine, previousLine = 0;
+		int y = lines.size();
+		for (int x = 0; x < y; x++) {
+			LineObject line = lines.get(x);
+			currentLine = line.getLineNumber();
+			if (x == 0) {
+				previousLine = currentLine;
+				continue;
+			}
+			if (currentLine != previousLine + 1) {
+				while (previousLine != currentLine - 1) {
+					lines.add(new LineObject("", ++previousLine));
+				}
+			}
+			previousLine = currentLine;
+		}
+		Collections.sort(lines, new LineObjectComparator());
+		return lines;
+	}
+
+	private void handleNodes(List<LineObject> lineSet, List<Node> nodes) {
+		if (!nodes.isEmpty()) {
+			for (Node node : nodes) {
+				List<LineObject> lines = handleNode(node);
+				if (lineSet.isEmpty()) {
+					lineSet.addAll(lines);
+				} else {
+					for (LineObject line : lines) {
+						while (lineSet.iterator().hasNext()) {
+							if (lineSet.iterator().next().getLineNumber() != line.getLineNumber())
+								lineSet.add(line);
+							{
+								System.out.println("STUCK");
+							}
+						}
+					}
+					if (!node.getChildrenNodes().isEmpty())
+						handleNodes(lineSet, node.getChildrenNodes());
+				}
+			}
+		}
+	}
+
+	private List<LineObject> handleNode(Node node) {
+		List<LineObject> lineSet = new ArrayList<LineObject>();
+		if (node instanceof IfStmt || node instanceof ForStmt || node instanceof ForeachStmt || node instanceof WhileStmt || node instanceof DoStmt
+				|| node instanceof SwitchStmt || node instanceof ExpressionStmt) {
+			lineSet.addAll(getLines(node.toString(), node.getBeginLine()));
+		}
+		return lineSet;
+	}
+
+	private List<LineObject> getLines(String statement, int beginLine) {
+		List<LineObject> lines = new ArrayList<LineObject>();
+		int lineNumber = beginLine;
+		for (String line : statement.split("[\\n\\t]\\s?")) {
 			lines.add(new LineObject(line, lineNumber++));
 		}
 		return lines;

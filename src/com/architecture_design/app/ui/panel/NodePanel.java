@@ -32,6 +32,7 @@ public class NodePanel extends JPanel {
 
 		setPreferredSize(new Dimension(80, 60));
 		setLayout(new BorderLayout(0, 0));
+		
 		label = new JLabel(text);
 		label.setHorizontalAlignment(SwingConstants.CENTER);
 		add(label, BorderLayout.CENTER);
@@ -52,12 +53,12 @@ public class NodePanel extends JPanel {
 			label.setFont(new Font("Segoe UI", Font.PLAIN, 10));
 			label.setBorder(new EmptyBorder(10, 30, 0, 0));
 		} else {
-			x = 20;
-			y = 10;
+			x = 15;
+			y = 0;
 			width = 50;
 			height = 50;
 			label.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-			label.setBorder(new EmptyBorder(10, 10, 0, 0));
+			label.setBorder(new EmptyBorder(0, 2, 10, 0));
 		}
 	}
 	

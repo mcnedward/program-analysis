@@ -63,7 +63,7 @@ public abstract class BaseDiagram<T extends BaseObject> extends JScrollPane {
 		createHeaderPanel();
 	}
 
-	private void createMainPanel() {
+	protected void createMainPanel() {
 		mainPanel = new JLayeredPane();
 		setViewportView(mainPanel);
 

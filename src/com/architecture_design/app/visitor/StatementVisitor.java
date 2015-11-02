@@ -39,6 +39,8 @@ public class StatementVisitor extends BaseVisitor<BaseStatement> {
 	@Override
 	public void visit(ForeachStmt f, BaseStatement arg) {
 		ForEachStatement statement = new ForEachStatement();
+		statement.setBeginLine(f.getBeginLine());
+		statement.setEndLine(f.getEndLine());
 		statement.setVariableType(f.getVariable().getType().toString());
 		statement.setVariableValue(f.getVariable().getVars().get(0).toString());
 		List<LineObject> lineObjects = convertToLineObjects(f);
@@ -49,6 +51,8 @@ public class StatementVisitor extends BaseVisitor<BaseStatement> {
 	@Override
 	public void visit(ForStmt f, BaseStatement arg) {
 		ForStatement statement = new ForStatement();
+		statement.setBeginLine(f.getBeginLine());
+		statement.setEndLine(f.getEndLine());
 		statement.setInit(f.getInit().get(0).toString());
 		statement.setCompare(f.getCompare().toString());
 		statement.setUpdate(f.getUpdate().get(0).toString());
@@ -114,6 +118,8 @@ public class StatementVisitor extends BaseVisitor<BaseStatement> {
 	@Override
 	public void visit(WhileStmt w, BaseStatement arg) {
 		WhileStatement statement = new WhileStatement();
+		statement.setBeginLine(w.getBeginLine());
+		statement.setEndLine(w.getEndLine());
 		statement.setCondition(w.getCondition().toString());
 		List<LineObject> lineObjects = convertToLineObjects(w);
 		statement.setLines(lineObjects);
@@ -123,6 +129,8 @@ public class StatementVisitor extends BaseVisitor<BaseStatement> {
 	@Override
 	public void visit(DoStmt d, BaseStatement arg) {
 		DoStatement statement = new DoStatement();
+		statement.setBeginLine(d.getBeginLine());
+		statement.setEndLine(d.getEndLine());
 		statement.setCondition(d.getCondition().toString());
 		List<LineObject> lineObjects = convertToLineObjects(d);
 		statement.setLines(lineObjects);
@@ -132,6 +140,8 @@ public class StatementVisitor extends BaseVisitor<BaseStatement> {
 	@Override
 	public void visit(SwitchStmt s, BaseStatement arg) {
 		SwitchStatement statement = new SwitchStatement();
+		statement.setBeginLine(s.getBeginLine());
+		statement.setEndLine(s.getEndLine());
 		statement.setSelector(s.getSelector().toString());
 		List<SwitchEntryStmt> entries = s.getEntries();
 		for (SwitchEntryStmt entry : entries) {

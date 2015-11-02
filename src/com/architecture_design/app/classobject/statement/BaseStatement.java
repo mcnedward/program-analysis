@@ -46,14 +46,33 @@ public class BaseStatement implements IStatement {
 		return null;
 	}
 
-	public void update() {
+	public List<LineObject> update() {
 		updateLineTypes(this);
 		updateLines(statements);
 		updateNodeNumbers(lines);
 		updateStatementNodeNumbers(statements);
 		orderStatements();
+		Collections.sort(lines, new LineObjectComparator());
+		int currentLine, previousLine = 0;
+		int y = lines.size();
+		for (int x = 0; x < y; x++) {
+			LineObject line = lines.get(x);
+			currentLine = line.getLineNumber();
+			if (x == 0) {
+				previousLine = currentLine;
+				continue;
+			}
+			if (currentLine != previousLine + 1) {
+				while (previousLine != currentLine - 1) {
+					lines.add(new LineObject("", ++previousLine));
+				}
+			}
+			previousLine = currentLine;
+		}
+		Collections.sort(lines, new LineObjectComparator());
 		cleanLines = new ArrayList<LineObject>(lines);
 		cleanLines(statements);
+		return lines;
 	}
 
 	private void updateLineTypes(BaseStatement bs) {
@@ -208,11 +227,13 @@ public class BaseStatement implements IStatement {
 
 	public BaseStatement getStatementAtLineNumber(BaseStatement statement, int lineNumber) {
 		for (BaseStatement s : statement.getStatements()) {
-			if (s.getBeginLine() == lineNumber) {
+			if (s.getLines().get(0).getLineNumber() == lineNumber) {
 				return s;
 			} else if (!s.getStatements().isEmpty()) {
 				// If that statement has children, check them too
-				return getStatementAtLineNumber(s, lineNumber);
+				BaseStatement childStatement = getStatementAtLineNumber(s, lineNumber);
+				if (childStatement != null)
+					return childStatement;
 			}
 		}
 		return null;

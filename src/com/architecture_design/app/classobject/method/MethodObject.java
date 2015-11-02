@@ -57,7 +57,7 @@ public class MethodObject extends BaseObject {
 	}
 	
 	public void update() {
-		statement.update();
+		methodLines = statement.update();
 		updateNodeNumbers(methodLines);
 	}
 

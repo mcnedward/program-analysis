@@ -74,7 +74,7 @@ public class MethodVisitor extends BaseVisitor<MethodObject> {
 	@Override
 	public void visit(BlockStmt b, MethodObject arg) {
 		List<Node> childrenNodes = b.getChildrenNodes();
-		
+
 		BaseStatement statement = new BaseStatement();
 		List<LineObject> lineObjects = convertToLineObjects(b);
 		statement.setLines(lineObjects);
@@ -84,10 +84,10 @@ public class MethodVisitor extends BaseVisitor<MethodObject> {
 		for (LineObject line : lineObjects) {
 			arg.addMethodLine(line);
 		}
-		
+
 		statement.setBeginLine(b.getBeginLine() + 1);
 		statement.setEndLine(b.getEndLine() - 1);
-		
+
 		if (!childrenNodes.isEmpty()) {
 			checkNodesForStatement(statementVisitor, childrenNodes, statement);
 		}

@@ -18,7 +18,8 @@ public class ClassObject extends BaseObject {
 	private List<String> interfaces;
 	private List<MethodObject> methods;
 	private List<VariableObject> variables;
-	
+	private List<ExpressionObject> expressions;
+
 	private File sourceFile;
 
 	public ClassObject() {
@@ -28,7 +29,7 @@ public class ClassObject extends BaseObject {
 		methods = new ArrayList<MethodObject>();
 		variables = new ArrayList<VariableObject>();
 	}
-	
+
 	public void addExtends(String extendsName) {
 		extendsList.add(extendsName);
 	}
@@ -144,6 +145,21 @@ public class ClassObject extends BaseObject {
 	}
 
 	/**
+	 * @return the expressions
+	 */
+	public List<ExpressionObject> getExpressions() {
+		return expressions;
+	}
+
+	/**
+	 * @param expressions
+	 *            the expressions to set
+	 */
+	public void setExpressions(List<ExpressionObject> expressions) {
+		this.expressions = expressions;
+	}
+
+	/**
 	 * @return the sourceFile
 	 */
 	public File getSourceFile() {
@@ -151,7 +167,8 @@ public class ClassObject extends BaseObject {
 	}
 
 	/**
-	 * @param sourceFile the sourceFile to set
+	 * @param sourceFile
+	 *            the sourceFile to set
 	 */
 	public void setSourceFile(File sourceFile) {
 		this.sourceFile = sourceFile;
